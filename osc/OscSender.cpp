@@ -1,6 +1,6 @@
 #include "OscSender.h"
 
-#include "oscpack/osc/OscOutboundPacketStream.h"
+#include "osc/OscOutboundPacketStream.h"
 
 OscSender::OscSender():portname(0),socket(NULL)
 {
@@ -21,7 +21,7 @@ void OscSender::sendPos(int x, int y, int z)
 
     p << osc::BeginBundleImmediate
         << osc::BeginMessage("/robot/pos")
-        << (long long)x << (long long)y << (long long)z
+        << x << y << z
         << osc::EndMessage
         << osc::EndBundle;
 
