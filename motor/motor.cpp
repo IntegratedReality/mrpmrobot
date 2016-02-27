@@ -1,8 +1,10 @@
 #include <wiringPi.h>
+#include <softPwm.h>
 #include "motor.h"
 
 namespace {
     bool finished_setup_gpio;
+    constexpr int PWM_RANGE = 256;
 }
 
 bool MotorClass::init(int pin1_number, int pin2_number, bool direction)
@@ -16,64 +18,56 @@ bool MotorClass::init(int pin1_number, int pin2_number, bool direction)
         }
         finished_setup_gpio = true;
     }
-    pinMode(pin1_number, OUTPUT);
-    pinMode(pin2_number, OUTPUT);
+    softPwmCreate(pin1_number, 0, PWM_RANGE); 
+    softPwmCreate(pin2_number, 0, PWM_RANGE);
     this->mode = MotorMode::Stop;
+    this->duty = 0;
     return true;
 }
 
 MotorClass::~MotorClass(void)
 {
-    this->setMotor(MotorMode::Stop);
+    this->setMotor(MotorMode::Stop, 0);
 }
 
-bool MotorClass::setMotor(MotorMode mode)
+bool MotorClass::setMotor(MotorMode mode, double duty)
 {
-    if (this->mode == MotorMode::Forward) {
-        if (mode == MotorMode::Back || mode == MotorMode::Brake) {
-            this->stop_wait_100us();
-        }
-    } else if (this->mode == MotorMode::Back) {
-        if (mode == MotorMode::Forward || mode == MotorMode::Brake) {
-            this->stop_wait_100us();
-        }
-    } else if (this->mode == MotorMode::Brake) {
-        if (mode == MotorMode::Forward || mode == MotorMode::Back) {
-            this->stop_wait_100us();
-        }
-    }
     this->mode = mode;
+    this->duty = duty;
+    if (!this->direction) {
+        this->duty = -1 * this->duty;
+    }
     switch (mode) {
-    case MotorMode::Forward:
-        if (direction) {
-            digitalWrite(this->in1pin, 1);
-            digitalWrite(this->in2pin, 0);
+    case MotorMode::Move:
+        if (this->duty >= 0) {
+            softPwmWrite(this->in1pin, static_cast<int>(this->duty * 256));
+            softPwmWrite(this->in2pin, 0);
         } else {
-            digitalWrite(this->in1pin, 0);
-            digitalWrite(this->in2pin, 1);
-        }
-        break;
-    case MotorMode::Back:
-        if (direction) {
-            digitalWrite(this->in1pin, 0);
-            digitalWrite(this->in2pin, 1);
-        } else {
-            digitalWrite(this->in1pin, 1);
-            digitalWrite(this->in2pin, 0);
+            softPwmWrite(this->in1pin, 0);
+            softPwmWrite(this->in2pin, static_cast<int>(this->duty * -256));
         }
         break;
     case MotorMode::Stop:
-        digitalWrite(this->in1pin, 0);
-        digitalWrite(this->in2pin, 0);
+        softPwmWrite(this->in1pin, 0);
+        softPwmWrite(this->in2pin, 0);
         break;
     case MotorMode::Brake:
-        digitalWrite(this->in1pin, 1);
-        digitalWrite(this->in2pin, 1);
+        softPwmWrite(this->in1pin, 1);
+        softPwmWrite(this->in2pin, 1);
         break;
     default:
         return false;
     }
     return true;
+}
+
+double MotorClass::getMotorDuty(void) const
+{
+    if (!direction) {
+        return -1 * this->duty;
+    } else {
+        return this->duty;
+    }
 }
 
 MotorMode MotorClass::getMotorMode(void) const
@@ -86,9 +80,3 @@ const char* SetupGpioException::what() const noexcept
     return "failed in SetupGpio";
 }
 
-void MotorClass::stop_wait_100us(void)
-{
-    digitalWrite(this->in1pin, 0);
-    digitalWrite(this->in2pin, 0);
-    delayMicroseconds(100);
-}
