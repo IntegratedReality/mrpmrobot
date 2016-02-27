@@ -6,9 +6,7 @@
 
 int main(void)
 {
-    std::array<MotorClass, 2> motor;
-    motor.at(0).init(19, 26, true);
-    motor.at(1).init(20, 21, true);
+    std::array<MotorClass, 2> motor{MotorClass(19, 26, true), MotorClass(20, 21, true)};
     int counter = 0;
     bool downcounterflag = false;
     bool next_end_flag = false;
@@ -22,6 +20,8 @@ int main(void)
         }
         if (counter > 1000) {
             downcounterflag = true;
+            counter = 0;
+            motor.at(0).setMotor(MotorMode::Brake, 0);
         } 
         if (downcounterflag && counter < -1000) {
             next_end_flag = true;

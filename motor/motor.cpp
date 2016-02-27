@@ -1,3 +1,4 @@
+#include <iostream>
 #include <wiringPi.h>
 #include <softPwm.h>
 #include "motor.h"
@@ -7,14 +8,11 @@ namespace {
     constexpr int PWM_RANGE = 256;
 }
 
-bool MotorClass::init(int pin1_number, int pin2_number, bool direction)
+MotorClass::MotorClass(int pin1_number, int pin2_number, bool direction) : in1pin(pin1_number), in2pin(pin2_number), direction(direction)
 {
-    this->in1pin = pin1_number;
-    this->in2pin = pin2_number;
-    this->direction = direction;
     if (!finished_setup_gpio) {
         if (wiringPiSetupGpio() == -1) {
-            return false;
+            throw SetupGpioException();    
         }
         finished_setup_gpio = true;
     }
@@ -22,7 +20,6 @@ bool MotorClass::init(int pin1_number, int pin2_number, bool direction)
     softPwmCreate(pin2_number, 0, PWM_RANGE);
     this->mode = MotorMode::Stop;
     this->duty = 0;
-    return true;
 }
 
 MotorClass::~MotorClass(void)
@@ -48,12 +45,12 @@ bool MotorClass::setMotor(MotorMode mode, double duty)
         }
         break;
     case MotorMode::Stop:
-        softPwmWrite(this->in1pin, 0);
-        softPwmWrite(this->in2pin, 0);
+        digitalWrite(this->in1pin, 0);
+        digitalWrite(this->in2pin, 0);
         break;
     case MotorMode::Brake:
-        softPwmWrite(this->in1pin, 1);
-        softPwmWrite(this->in2pin, 1);
+        digitalWrite(this->in1pin, 1);
+        digitalWrite(this->in2pin, 1);
         break;
     default:
         return false;

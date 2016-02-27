@@ -17,7 +17,7 @@ class MotorClass
     bool direction;
     double duty;
 public:
-    bool init(int in1pin, int in2pin, bool direction);
+    MotorClass(int in1pin, int in2pin, bool direction);
     ~MotorClass(void);
     bool setMotor(MotorMode mode, double duty);
     MotorMode getMotorMode() const;
