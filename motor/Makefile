@@ -1,4 +1,4 @@
-CXXFLAGS = -std=c++11 -Wall -Wextra -Wconversion
+CXXFLAGS = -std=c++11 -Wall -Wextra -Wconversion -I /usr/include/eigen3/
 LDFLAGS = -lwiringPi 
 CXX = g++
 SRCS = $(wildcard *.cpp)

@@ -35,14 +35,14 @@ bool DriveClass::updateDrive(void)
     double diff_of_time = this->now_status.at(3) - this->previous_status.at(3);
     double now_velocity_x = (this->now_status.at(0) - this->previous_status.at(1)) / diff_of_time;
     double now_velocity_y = (this->now_status.at(0) - this->previous_status.at(1)) / diff_of_time;
-    double now_velocity = std::sqrt(now_velocity_x * now_velocity_x + now_velocity_y * now_velocity_y);
+    this->now_velocity = std::sqrt(now_velocity_x * now_velocity_x + now_velocity_y * now_velocity_y);
     double error_of_velocity = this->target_velocity - now_velocity;
     double next_average_duty = 0;
     next_average_duty += error_of_velocity * DRIVE_V_GAIN_P;
     sum_of_error_of_v += error_of_velocity;
     next_average_duty += sum_of_error_of_v * DRIVE_V_GAIN_I;
     next_average_duty += (error_of_velocity - previous_error_of_v) * DRIVE_V_GAIN_D;
-    double now_omega = (this->now_status.at(2) - this->previous_status.at(2)) / diff_of_time;
+    this->now_omega = (this->now_status.at(2) - this->previous_status.at(2)) / diff_of_time;
     double error_of_omega = this->target_omega - now_omega;
     double next_diff_duty = 0;
     next_diff_duty += error_of_omega * DRIVE_OMEGA_GAIN_P;
@@ -64,4 +64,14 @@ double DriveClass::getTargetVelocity(void) const
 double DriveClass::getTargetOmega(void) const
 {
     return this->target_omega;
+}
+
+double DriveClass::getNowVelocity(void) const
+{
+    return this->now_velocity;
+}
+
+double DriveClass::getNowOmega(void) const
+{
+    return this->now_omega;
 }
