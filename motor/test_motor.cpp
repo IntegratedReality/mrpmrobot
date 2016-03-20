@@ -6,29 +6,33 @@
 
 int main(void)
 {
-    std::array<MotorClass, 2> motor{MotorClass(19, 26, true), MotorClass(20, 21, true)};
+    std::array<MotorClass, 2> motor{MotorClass(3, 4, true), MotorClass(14, 15, true)};
     int counter = 0;
     bool downcounterflag = false;
     bool next_end_flag = false;
-    while (true) {
-        motor.at(0).setMotor(MotorMode::Move, counter / 1000.0);
+    int count = 5;
+    while (count > 0) {
+        motor.at(0).setMotor(MotorMode::Move, counter / 100.0);
+        motor.at(1).setMotor(MotorMode::Move, counter / 100.0);
         std::cout << counter << std::endl;
         if (!downcounterflag) {
             counter++;
         } else {
             counter--;
         }
-        if (counter > 1000) {
+        if (counter > 100) {
             downcounterflag = true;
             counter = 0;
             motor.at(0).setMotor(MotorMode::Brake, 0);
+            motor.at(1).setMotor(MotorMode::Brake, 0);
         } 
-        if (downcounterflag && counter < -1000) {
+        if (downcounterflag && counter < -100) {
             next_end_flag = true;
             downcounterflag = false;
         }
         if (next_end_flag && counter == 1) {
-            break;
+            count -= 1;
+            //break;
         }
         delay(10);
     }
