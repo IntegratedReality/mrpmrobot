@@ -30,7 +30,7 @@ endif
 all: $(TARGET)
 
 $(TARGET): $(OBJS) $(LIBS)
-	$(CXX) -o $@ $^ $(LDFLAGS)
+	$(CXX) -o $@.out $^ $(LDFLAGS)
 
 $(OBJDIR)/%.o: %.cpp
 	-echo $@ | sed -E 's@(.*/).*@\1@' | xargs mkdir -p

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <exception>
+#include "../gpioerror.h"
 
 enum class MotorMode
 {
@@ -24,8 +25,3 @@ public:
     double getMotorDuty() const;
 };
 
-class SetupGpioException : public std::exception
-{
-public:
-    const char* what() const noexcept override; 
-};
