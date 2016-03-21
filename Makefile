@@ -1,10 +1,10 @@
 TARGET	= main
-INCLUDES = /usr/include/eigen3 /usr/include/oscpack
-LDFLAGS = -lwiringPi 
+INCLUDES = -I/usr/local/include/eigen3 -I/usr/local/include/oscpack
+LDFLAGS = -lwiringPi -loscpack
 NOMAKEDIR = .git%
-BJDIR = objs
+OBJDIR = objs
 
-GCC = g++
+CXX = g++
 CXXFLAGS = -std=c++11 -Wall -Wextra -Wconversion
 
 CPPS = $(shell find * -name "*.cpp")
@@ -12,25 +12,29 @@ SRCS = $(filter-out $(NOMAKEDIR), $(CPPS))
 DIRS = $(dir $(SRCS))
 BINDERS = $(addprefix $(OBJDIR)/, $(DIRS))
 
-OBJS = $(addprefix $(OBJDIR)/. $patsubst %,.cpp, %.o, $(SRCS))
+OBJS = $(addprefix $(OBJDIR)/, $(patsubst %.cpp, %.o, $(SRCS)))
 DEPS = $(OBJS:.o=.d)
 TILS = $(patsubst %.cpp, %.cpp~, $(SRCS))
 
-ifeq "$(strip $OBJDIR))" ""
+.SUFFIXES : .o .cpp
+.PHONY: clean
+
+ifeq "$(strip $OBJDIR)" ""
 	OBJDIR = .
 endif
 
-ifeq "$(strip $DIRS))" ""
+ifeq "$(strip $DIRS)" ""
 	OBJDIR = .
 endif
 
-all: $(ONJS) $(TARGET)
+all: $(TARGET)
 
 $(TARGET): $(OBJS) $(LIBS)
-	$(GCC) -o $@ $^ $(LDFLAGS)
+	$(CXX) -o $@.out $^ $(LDFLAGS)
 
 $(OBJDIR)/%.o: %.cpp
-	$(GCC) $(CFLAGS) $(INCLUDE) -o $@ -c $<
+	-echo $@ | sed -E 's@(.*/).*@\1@' | xargs mkdir -p
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ -c $<
 
 clean:
 	@rm -rf $(TARGET) $(TILS) $(OBJDIR)

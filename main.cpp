@@ -12,7 +12,7 @@ Seimitsu Lab, Mayfes
 #include "motor/operate.h"
 
 
-void main(void)
+int main(void)
 {
 
 

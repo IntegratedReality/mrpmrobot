@@ -35,8 +35,3 @@ void LedUnit::off()
     state = false;
 }
 
-const char* SetupGpioException::what() const noexcept
-{
-    return "failed in SetupGpio";
-}
-

@@ -72,8 +72,3 @@ MotorMode MotorClass::getMotorMode(void) const
     return this->mode;
 }
 
-const char* SetupGpioException::what() const noexcept
-{
-    return "failed in SetupGpio";
-}
-
