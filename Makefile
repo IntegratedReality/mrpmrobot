@@ -37,7 +37,7 @@ $(OBJDIR)/%.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ -c $<
 
 clean:
-	@rm -rf $(TARGET) $(TILS) $(OBJDIR)
+	@rm -rf main.out $(TARGET) $(TILS) $(OBJDIR)
 
 -include $(DEPS)
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <exception>
-#include "../gpioerror.h"
+#include "../common/gpioerror.h"
 
 class LedUnit
 {
