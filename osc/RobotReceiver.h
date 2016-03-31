@@ -17,7 +17,7 @@ class RobotReceiver {
 		void init();
 		void update();
 		RobotData getData(int _id);
-		RobotReceiver() : s(IpEndpointName(IpEndpointName::ANY_ADDRESS, PORT)) {}
+		RobotReceiver() : s(IpEndpointName(IpEndpointName::ANY_ADDRESS, PORT), &listener) {}
 	private:
 		RobotListener listener;
 		UdpListeningReceiveSocket s;
