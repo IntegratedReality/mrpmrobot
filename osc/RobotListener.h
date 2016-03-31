@@ -9,11 +9,10 @@
 #include "../common/RobotData.h"
 #include "../common/Const.h"
 
-class RobotListner : public osc:OscPacketListner {
+class RobotListener : public osc::OscPacketListner {
 public:
-	void setup(RobotData &_data);
-	virtual void ProcessMsg( const osc::ReceivedMessage& msg,
-							 const IpEndpointName& remoteEndPoint );
+	void setup(RobotData *_data);
+	virtual void ProcessMessage(const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndPoint );
 private:
-	RobotData *data[NUM_OF_ROBOT];
+	RobotData *data;
 };
