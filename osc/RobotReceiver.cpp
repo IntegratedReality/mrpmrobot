@@ -2,7 +2,7 @@
 
 void RobotReceiver::init() {
 	listener.setup(data);
-	s.RunUntilSigInt();
+    s.RunUntilSigInt();
 }
 
 void RobotReceiver::update() {
