@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <string>
+#include <thread>
 #include <osc/OscReceivedElements.h>
 #include <osc/OscPacketListener.h>
 #include <ip/UdpSocket.h>
@@ -19,6 +20,7 @@ class RobotReceiver {
 		RobotData getData(int _id);
 		RobotReceiver() : s(IpEndpointName(IpEndpointName::ANY_ADDRESS, PORT), &listener) {}
 	private:
+        std::thread th;
 		RobotListener listener;
 		UdpListeningReceiveSocket s;
 		RobotData data[NUM_OF_ROBOT];

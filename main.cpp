@@ -22,7 +22,7 @@ int main(void)
     receiver.init();
     while (1) {
        receiver.update();
-       if (count != 3000000) {
+       if (count != 30000000) {
            count++;
            continue;
        }

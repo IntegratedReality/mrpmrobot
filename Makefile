@@ -1,6 +1,6 @@
 TARGET	= main
 INCLUDES = -I/usr/local/include/eigen3 -I/usr/local/include/oscpack
-LDFLAGS = -lwiringPi -loscpack
+LDFLAGS = -lwiringPi -loscpack -lpthread
 NOMAKEDIR = .git%
 OBJDIR = objs
 

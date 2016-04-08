@@ -10,8 +10,6 @@ void RobotListener::setup(RobotData *_data) {
 void RobotListener::ProcessMessage(const osc::ReceivedMessage& m, const IpEndpointName& remoteEndPoint) {
 	try {
 		if(std::strcmp(m.AddressPattern(), "/position") == 0) {
-            cout << "hoge" << endl;
-            
 			osc::ReceivedMessageArgumentStream args = m.ArgumentStream();
 			osc::int32 id;
 			osc::int32 time;
@@ -24,8 +22,6 @@ void RobotListener::ProcessMessage(const osc::ReceivedMessage& m, const IpEndpoi
 			data[id].pos.x = x;
 			data[id].pos.y = y;
 			data[id].pos.theta = theta;
-
-            cout << data[id].pos.x << endl;
 		} else if (std::strcmp(m.AddressPattern(), "/main/robotstate") == 0) {
 			osc::ReceivedMessageArgumentStream args = m.ArgumentStream();
 			osc::int32 id;
