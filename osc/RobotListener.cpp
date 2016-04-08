@@ -34,4 +34,15 @@ void RobotListener::ProcessMessage(const osc::ReceivedMessage& m, const IpEndpoi
 		std::cout << "error while parsing message :."
 			<< m.AddressPattern() << ": " << e.what() << "\n";
 	}
+    m_message_received = true;
+}
+
+bool RobotListener::checkMessageReceived(void)
+{
+    if (m_message_received) {
+        m_message_received = false;
+        return true;
+    } else {
+        return false;
+    }
 }

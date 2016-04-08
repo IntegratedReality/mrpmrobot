@@ -13,6 +13,8 @@ class RobotListener : public osc::OscPacketListener {
 public:
 	void setup(RobotData *_data);
 	virtual void ProcessMessage(const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndPoint );
+    bool checkMessageReceived(void);
 private:
 	RobotData *data;
+    bool m_message_received;
 };

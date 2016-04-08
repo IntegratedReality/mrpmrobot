@@ -6,9 +6,11 @@ void RobotReceiver::init() {
     th.detach();
 }
 
-void RobotReceiver::update() {
-}
-
 RobotData RobotReceiver::getData(int _id) {
     return data[_id];
+}
+
+bool RobotReceiver::checkMessageReceived(void)
+{
+    return listener.checkMessageReceived();
 }
