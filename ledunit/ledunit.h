@@ -5,8 +5,8 @@
 
 class LedUnit
 {
-    bool state;
     int inpin;
+    bool state;
 public:
     LedUnit(int pinNumber);
     ~LedUnit(void);

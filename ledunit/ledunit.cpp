@@ -2,19 +2,8 @@
 #include <wiringPi.h>
 #include "ledunit.h"
 
-namespace {
-    bool finished_setup_gpio;
-}
-
-
 LedUnit::LedUnit(int pinNumber) : inpin(pinNumber), state(false)
 {
-    if (!finished_setup_gpio) {
-        if (wiringPiSetupGpio() == -1) {
-            throw SetupGpioException();    
-         }
-        finished_setup_gpio = true;
-    }
     pinMode(pinNumber, OUTPUT); 
 }
 
