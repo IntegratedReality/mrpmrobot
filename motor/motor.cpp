@@ -4,18 +4,17 @@
 #include "motor.h"
 
 namespace {
-    bool finished_setup_gpio;
     constexpr int PWM_RANGE = 256;
 }
 
 MotorClass::MotorClass(int pin1_number, int pin2_number, bool direction) : in1pin(pin1_number), in2pin(pin2_number), direction(direction)
 {
-    if (!finished_setup_gpio) {
-        if (wiringPiSetupGpio() == -1) {
-            throw SetupGpioException();    
-        }
-        finished_setup_gpio = true;
-    }
+//    if (!finished_setup_gpio) {
+//        if (wiringPiSetupGpio() == -1) {
+//            throw SetupGpioException();    
+//        }
+//        finished_setup_gpio = true;
+//    }
     softPwmCreate(pin1_number, 0, PWM_RANGE); 
     softPwmCreate(pin2_number, 0, PWM_RANGE);
     this->mode = MotorMode::Stop;

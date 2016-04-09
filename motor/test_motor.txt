@@ -6,33 +6,32 @@
 
 int main(void)
 {
-    std::array<MotorClass, 2> motor{MotorClass(3, 4, true), MotorClass(14, 15, true)};
+    wiringPiSetupGpio();
+    std::array<MotorClass, 2> motor{MotorClass(3, 4, true), MotorClass(14, 15, false)};
     int counter = 0;
     bool downcounterflag = false;
     bool next_end_flag = false;
-    int count = 5;
-    while (count > 0) {
-        motor.at(0).setMotor(MotorMode::Move, counter / 100.0);
-        motor.at(1).setMotor(MotorMode::Move, counter / 100.0);
+    while (true) {
+        motor.at(0).setMotor(MotorMode::Move, counter / 1000.0);
+        motor.at(1).setMotor(MotorMode::Move, counter / 1000.0);
         std::cout << counter << std::endl;
         if (!downcounterflag) {
             counter++;
         } else {
             counter--;
         }
-        if (counter > 100) {
+        if (counter > 1000) {
             downcounterflag = true;
             counter = 0;
             motor.at(0).setMotor(MotorMode::Brake, 0);
             motor.at(1).setMotor(MotorMode::Brake, 0);
         } 
-        if (downcounterflag && counter < -100) {
+        if (downcounterflag && counter < -1000) {
             next_end_flag = true;
             downcounterflag = false;
         }
         if (next_end_flag && counter == 1) {
-            count -= 1;
-            //break;
+            break;
         }
         delay(10);
     }
