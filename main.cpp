@@ -21,7 +21,6 @@ int main(void)
     long count = 0;
     receiver.init();
     while (1) {
-       receiver.update();
        if (count != 30000000) {
            count++;
            continue;

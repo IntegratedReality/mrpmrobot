@@ -1,4 +1,4 @@
-TARGET	= main
+TARGET	= main.bin
 INCLUDES = -I/usr/local/include/eigen3 -I/usr/local/include/oscpack
 LDFLAGS = -lwiringPi -loscpack -lpthread
 NOMAKEDIR = .git%
@@ -30,14 +30,14 @@ endif
 all: $(TARGET)
 
 $(TARGET): $(OBJS) $(LIBS)
-	$(CXX) -o $@.out $^ $(LDFLAGS)
+	$(CXX) -o $@ $^ $(LDFLAGS)
 
 $(OBJDIR)/%.o: %.cpp
 	-echo $@ | sed -E 's@(.*/).*@\1@' | xargs mkdir -p
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ -c $<
 
 clean:
-	@rm -rf main.out $(TARGET) $(TILS) $(OBJDIR)
+	@rm -rf $(TARGET) $(TILS) $(OBJDIR)
 
 -include $(DEPS)
 
