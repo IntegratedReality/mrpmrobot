@@ -6,20 +6,51 @@ Seimitsu Lab, Mayfes
 
 #include <iostream>
 #include <array>
+#include <thread>
+#include <mutex>
 
 using namespace std;
 
-#include "motor/motor.h"
+#include "ledunit/ledunit.h"
+
+#include "motor/robotcontrol.h"
 #include "motor/drive.h"
-#include "motor/operate.h"
 
 #include "osc/RobotReceiver.h"
 
+#include "wiringPi.h"
+
+std::mutex mutex_obj;
+
 int main(void)
 {
+    wiringPiSetupGpio();
+    LedUnit led_unit(27);
+    led_unit.on();
     RobotReceiver receiver;    
     long count = 0;
     receiver.init();
+    while (!receiver.checkMessageReceived());
+//    RobotControl robot_control({{3, 4}, {14, 15}, true, false}, {receiver.getData(0).pos.x, receiver.getData(0).pos.y, receiver.getData(0).pos.theta}, receiver.getData(0).time);
+    DriveClass drive(MotorClass(3, 4, true), MotorClass(17, 18, false), receiver.getData(0).pos.x, receiver.getData(0).pos.y, receiver.getData(0).pos.theta, receiver.getData(0).time);
+    std::cout << "x:" << receiver.getData(0).pos.x << " " << receiver.getData(0).time << std::endl;
+    std::thread robot_control_thread([&](){
+        while (true) {
+            while (!receiver.checkMessageReceived());
+         //   std::cout << "x:" << receiver.getData(0).pos.x << " " << receiver.getData(0).time << std::endl;
+            mutex_obj.lock();
+//            robot_control.setNowPosition({receiver.getData(0).pos.x, receiver.getData(0).pos.y, receiver.getData(0).pos.theta}, receiver.getData(0).time);
+//            robot_control.update();
+            drive.updateData(receiver.getData(0).pos.x, receiver.getData(0).pos.y, receiver.getData(0).pos.theta, receiver.getData(0).time);
+            drive.updateDrive();
+            mutex_obj.unlock();
+        }
+        });
+    mutex_obj.lock();
+//    robot_control.setTargetPosition({500, 500, 0}, 100);
+    drive.setTarget(0.2, 0);
+    mutex_obj.unlock();
+    int hoge = 0;
     while (1) {
        if (count != 30000000) {
            count++;
@@ -30,6 +61,7 @@ int main(void)
        cout << "x: " << data.pos.x << " ";
        cout << "y: " << data.pos.y << " ";
        cout << "theta: " << data.pos.theta;
+       cout << "time:" << data.time;
        cout << endl;
        count %= 30;
     }

@@ -1,7 +1,10 @@
 #include "RobotListener.h"
 
+#include <mutex>
 #include <iostream>
 using namespace std;
+
+extern std::mutex mutex_obj;
 
 void RobotListener::setup(RobotData *_data) {
 	data = _data;
@@ -34,15 +37,20 @@ void RobotListener::ProcessMessage(const osc::ReceivedMessage& m, __attribute__(
 		std::cout << "error while parsing message :."
 			<< m.AddressPattern() << ": " << e.what() << "\n";
 	}
+    mutex_obj.lock();
     m_message_received = true;
+    mutex_obj.unlock();
 }
 
 bool RobotListener::checkMessageReceived(void)
 {
+    mutex_obj.lock();
     if (m_message_received) {
         m_message_received = false;
+        mutex_obj.unlock();
         return true;
     } else {
+        mutex_obj.unlock();
         return false;
     }
 }

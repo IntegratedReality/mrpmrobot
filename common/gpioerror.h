@@ -1,3 +1,5 @@
+#pragma once
+
 #include <exception>
 
 class SetupGpioException : public std::exception

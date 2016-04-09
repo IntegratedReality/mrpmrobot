@@ -10,14 +10,12 @@ namespace
     constexpr double PI = 3.141592653589793231;
 }
 
-bool Operate::setTargetPosition(double target_x, double target_y, double target_theta, double target_v, double max_v = std::numeric_limits<double>::max(), double max_omega = std::numeric_limits<double>::max())
+bool Operate::setTargetPosition(double target_x, double target_y, double target_theta, double target_v)
 {
     this->target_position.at(0) = target_x;
     this->target_position.at(1) = target_y;
     this->target_position.at(2) = target_theta;
     this->target_velocity = target_v;
-    this->max_velocity.at(0) = max_v;
-    this->max_velocity.at(1) = max_omega;
     return true;
 }
 
