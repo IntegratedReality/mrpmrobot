@@ -1,5 +1,6 @@
 #include <limits>
 #include <algorithm>
+#include <iostream>
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 #include "operate.h"
@@ -41,8 +42,9 @@ bool Operate::operateUpdate(void)
     double alpha = now_pos.y() / l;
     alpha = std::max(-PI / 2, (std::min(alpha, PI / 2)));
     double omega_dest = - 3 * this->drive.getNowVelocity() / l * (alpha + now_theta);
-    omega_dest = std::max(-1 * this->drive.getNowVelocity() / l, std::min(omega_dest, this->drive.getNowVelocity()));
+    omega_dest = std::max(-1 * this->drive.getNowVelocity() / l, std::min(omega_dest, this->drive.getNowVelocity() / l));
     this->drive.setTarget(this->target_velocity, omega_dest);
+    std::cout << this->target_velocity << "\t" << omega_dest << std::endl;
     this->drive.updateDrive();
     return true;
 }
