@@ -26,10 +26,12 @@ int main(void)
            continue;
        }
        RobotData data;
-       data = receiver.getData(0);
+       data = receiver.getData(ID);
        cout << "x: " << data.pos.x << " ";
        cout << "y: " << data.pos.y << " ";
-       cout << "theta: " << data.pos.theta;
+       cout << "theta: " << data.pos.theta << " ";
+       cout << "drc: " << data.operation.direction << " ";
+       cout << "shot: " << data.operation.shot << " ";
        cout << endl;
        count %= 30;
     }

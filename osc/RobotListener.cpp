@@ -29,7 +29,16 @@ void RobotListener::ProcessMessage(const osc::ReceivedMessage& m, const IpEndpoi
 
 			args >> id >> state >> osc::EndMessage;
 			data[id].state = (EState)state;
-		}
+		} else if (std::strcmp(m.AddressPattern(), "/controller/operation") == 0) {
+            cout << "hoge" << endl;
+			osc::ReceivedMessageArgumentStream args = m.ArgumentStream();
+			osc::int32 drc;
+            bool shot;
+
+			args >> drc >> shot >> osc::EndMessage;
+			data[ID].operation.direction = (EDirection)drc;
+			data[ID].operation.shot = shot;
+        }
 	} catch(osc::Exception& e) {
 		std::cout << "error while parsing message :."
 			<< m.AddressPattern() << ": " << e.what() << "\n";
