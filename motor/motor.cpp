@@ -28,7 +28,7 @@ MotorClass::~MotorClass(void)
 
 bool MotorClass::setMotor(MotorMode mode, double duty)
 {
-    std::cout << duty << std::endl;
+    //std::cout << duty << std::endl;
     this->mode = mode;
     this->duty = duty;
     if (!this->direction) {

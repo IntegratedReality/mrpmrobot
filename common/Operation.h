@@ -1,7 +1,7 @@
 #pragma once
 
 enum EDirection {
-	NONE,
+	NO_INPUT,
 	TOP,
 	TOP_RIGHT,
 	RIGHT,
