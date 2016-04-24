@@ -18,6 +18,7 @@ using namespace std;
 #include "motor/params.h"
 
 #include "osc/RobotReceiver.h"
+#include "osc/RobotSender.h"
 
 #include "wiringPi.h"
 
@@ -28,31 +29,29 @@ int main(void)
     wiringPiSetupGpio();
     LedUnit led_unit(24);
     led_unit.on();
-    RobotReceiver receiver;    
-    long count = 0;
+
+    RobotReceiver receiver;
     receiver.init();
+    RobotSender sender;
+    sender.setup("Coconuts.local", 8000);
+
     while (!receiver.checkMessageReceived());
-    //RobotControl robot_control({{3, 4}, {17, 18}, true, false}, {receiver.getData(0).pos.x, receiver.getData(0).pos.y, receiver.getData(0).pos.theta}, receiver.getData(0).time);
-    DriveClass drive(MotorClass(22, 27, false), MotorClass(17, 18, false), receiver.getData(0).pos.x, receiver.getData(0).pos.y, receiver.getData(0).pos.theta, receiver.getData(0).time);
-    std::cout << "x:" << receiver.getData(0).pos.x << " " << receiver.getData(0).time << std::endl; //これを消すと動かなくなる
+
+    DriveClass drive(MotorClass(22, 27, false), MotorClass(17, 18, true), receiver.getData(ID).pos.x, receiver.getData(ID).pos.y, receiver.getData(ID).pos.theta, receiver.getData(ID).time);
+
     std::thread robot_control_thread([&](){
             while (true) {
             while (!receiver.checkMessageReceived());
-            //std::cout << "x:" << receiver.getData(0).pos.x << " " << receiver.getData(0).time << std::endl;
             mutex_obj.lock();
-            //robot_control.setNowPosition({receiver.getData(0).pos.x, receiver.getData(0).pos.y, receiver.getData(0).pos.theta}, receiver.getData(0).time);
-            //robot_control.update();
-            drive.updateData(receiver.getData(0).pos.x, receiver.getData(0).pos.y, receiver.getData(0).pos.theta, receiver.getData(0).time);
+            drive.updateData(receiver.getData(ID).pos.x, receiver.getData(ID).pos.y, receiver.getData(ID).pos.theta, receiver.getData(ID).time);
             drive.updateDrive();
+            sender.sendShot(ID, receiver.getData(ID).operation.shot);
             mutex_obj.unlock();
             }
             });
-    while (1) {
-        if (count != 30000000) {
-            count++;
-            continue;
-        }
 
+    long count = 0;
+    while (1) {
         // ここを弄るといいらしい
         RobotData data;
         data = receiver.getData(ID);
@@ -60,15 +59,46 @@ int main(void)
         double max_v = 0.2, max_omega = 0.005;
         double v = 0, omega = 0;
         switch (data.operation.direction) {
+            case NO_INPUT:
+                break;
             case TOP:
                 v = max_v;
                 break;
+            case TOP_RIGHT:
+                v = max_v;
+                omega = -max_omega;
+                break;
+            case RIGHT:
+                omega = -max_omega;
+                break;
+            case BOTTOM_RIGHT:
+                v = -max_v;
+                omega = max_omega;
+                break;
+            case BOTTOM:
+                v = -max_v;
+                break;
+            case BOTTOM_LEFT:
+                v = -max_v;
+                omega = -max_omega;
+                break;
+            case LEFT:
+                omega = max_omega;
+                break;
+            case TOP_LEFT:
+                v = max_v;
+                omega = max_omega;
+                break;
         }
-        //mutex_obj.lock();
-        //drive.setTarget(v, omega);
-        //mutex_obj.unlock();
+        mutex_obj.lock();
+        drive.setTarget(v, omega);
+        mutex_obj.unlock();
         // ここまでを弄る
 
+        if (count != 30000000) {
+            count++;
+            continue;
+        }
         cout << "v: " << v << " ";
         cout << "omega: " << omega << " ";
         cout << "x: " << data.pos.x << " ";
@@ -82,4 +112,3 @@ int main(void)
     }
     return 0;
 }
-

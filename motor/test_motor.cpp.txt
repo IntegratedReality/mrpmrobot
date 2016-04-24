@@ -1,0 +1,40 @@
+#include "motor.h"
+#include <iostream>
+#include <wiringPi.h>
+#include <random>
+#include <array>
+
+int main(void)
+{
+    std::array<MotorClass, 2> motor{MotorClass(17, 18, true), MotorClass(22, 27, true)};
+    int counter = 0;
+    bool downcounterflag = false;
+    bool next_end_flag = false;
+    int count = 5;
+    while (count > 0) {
+        motor.at(0).setMotor(MotorMode::Move, counter / 100.0);
+        motor.at(1).setMotor(MotorMode::Move, counter / 100.0);
+        std::cout << counter << std::endl;
+        if (!downcounterflag) {
+            counter++;
+        } else {
+            counter--;
+        }
+        if (counter > 100) {
+            downcounterflag = true;
+            counter = 0;
+            motor.at(0).setMotor(MotorMode::Brake, 0);
+            motor.at(1).setMotor(MotorMode::Brake, 0);
+        } 
+        if (downcounterflag && counter < -100) {
+            next_end_flag = true;
+            downcounterflag = false;
+        }
+        if (next_end_flag && counter == 1) {
+            count -= 1;
+            //break;
+        }
+        delay(10);
+    }
+    return 0;
+}

@@ -9,6 +9,7 @@ class DriveClass
     MotorClass left_motor;
     double target_velocity;
     double target_omega;
+    // おそらく0から順に、x, y, theta, time(大杉)
     std::array<double, 4> now_status;
     std::array<double, 4> previous_status;
     double now_velocity;

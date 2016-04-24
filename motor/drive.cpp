@@ -5,6 +5,8 @@
 #include "drive.h"
 #include "params.h"
 
+using namespace std;
+
 bool DriveClass::updateData(double position_x, double position_y, double position_theta, double time)
 {
     this->previous_status = this->now_status;
@@ -30,6 +32,22 @@ bool DriveClass::updateDrive(void)
     static double sum_of_error_of_omega = 0;
     static double previous_error_of_omega = 0;
     double diff_of_time = this->now_status.at(3) - this->previous_status.at(3);
+
+    // カメラ鯖からのフィードバック情報がない場合に発生する0除算回避用プロセス(大杉)
+    if (diff_of_time == 0) {
+        double max_vel = 0.3;
+        double max_ome = 0.006;
+        double next_right_duty = 0;
+        double next_left_duty = 0;
+        double vel_duty = target_velocity / max_vel;
+        double ome_duty = target_omega / max_ome * 0.5;
+        next_right_duty = vel_duty + ome_duty;
+        next_left_duty = vel_duty - ome_duty;
+        this->right_motor.setMotor(MotorMode::Move, next_right_duty);
+        this->left_motor.setMotor(MotorMode::Move, next_left_duty);
+        return true;
+    }
+
     double now_velocity_x = (this->now_status.at(0) - this->previous_status.at(0)) / diff_of_time;
     double now_velocity_y = (this->now_status.at(1) - this->previous_status.at(1)) / diff_of_time;
     this->now_velocity = std::sqrt(now_velocity_x * now_velocity_x + now_velocity_y * now_velocity_y);
@@ -55,8 +73,6 @@ bool DriveClass::updateDrive(void)
     while (true) {
         next_right_duty = next_average_duty + next_diff_duty;
         next_left_duty = next_average_duty - next_diff_duty;
-        //next_right_duty = std::max<double>(-1, std::min<double>(1, next_right_duty));
-        //next_left_duty = std::max<double>(-1, std::min<double>(1, next_left_duty));
         if (-1 <= next_right_duty && next_right_duty <= 1 && -1 <= next_left_duty && next_left_duty <= 1) {
             break;
         } else {
@@ -66,11 +82,7 @@ bool DriveClass::updateDrive(void)
         }
     } 
     this->right_motor.setMotor(MotorMode::Move, next_right_duty);
-    //this->right_motor.setMotor(MotorMode::Move, 1);
     this->left_motor.setMotor(MotorMode::Move, next_left_duty);
-    //this->left_motor.setMotor(MotorMode::Move, 1);
-    //std::cout << now_velocity << "\t" << error_of_velocity << "\t" << sum_of_error_of_v << "\t" << previous_error_of_v << "\t" << next_average_duty << "\t" << now_omega << "\t" << error_of_omega << "\t" << sum_of_error_of_omega << "\t" << previous_error_of_omega << "\t" << next_diff_duty << std::endl;
-    //std::cout << now_velocity << "\t" << this->now_status.at(3) << std::endl;
     previous_error_of_v = error_of_velocity;
     previous_error_of_omega = error_of_omega;
     first_update = false;

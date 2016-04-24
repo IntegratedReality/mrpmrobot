@@ -9,14 +9,15 @@
 
 #define OUTPUT_BUFFER_SIZE 1024
 
-class OscSender{
-public:
-    OscSender();
-    void setup(std::string host, int port);
-    void sendPos(int x, int y, int z);
+class RobotSender{
+    public:
+        RobotSender();
+        void setup(std::string host, int port);
+        void sendPos(int x, int y, int z);
+        void sendShot(int _id, bool _shot);
 
-private:
-    std::string hostname;
-    int portname;
-    UdpTransmitSocket* socket;
+    private:
+        std::string hostname;
+        int portname;
+        UdpTransmitSocket* socket;
 };

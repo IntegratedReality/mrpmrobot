@@ -3,11 +3,11 @@
 #include "osc/OscOutboundPacketStream.h"
 #include "ip/UdpSocket.h"
 
-OscSender::OscSender():portname(0),socket(NULL)
+RobotSender::RobotSender():portname(0),socket(NULL)
 {
 }
 
-void OscSender::setup(std::string host, int port)
+void RobotSender::setup(std::string host, int port)
 {
     socket = new UdpTransmitSocket(IpEndpointName(host.c_str(), port));
     
@@ -15,7 +15,7 @@ void OscSender::setup(std::string host, int port)
     this->portname = port;
 }
 
-void OscSender::sendPos(int x, int y, int z)
+void RobotSender::sendPos(int x, int y, int z)
 {
     char buffer[OUTPUT_BUFFER_SIZE];
     osc::OutboundPacketStream p(buffer, OUTPUT_BUFFER_SIZE);
@@ -29,3 +29,16 @@ void OscSender::sendPos(int x, int y, int z)
     socket->Send(p.Data(), p.Size());
 }
 
+void RobotSender::sendShot(int _id, bool _shot) {
+    char buffer[OUTPUT_BUFFER_SIZE];
+    osc::OutboundPacketStream p(buffer, OUTPUT_BUFFER_SIZE);
+
+    p << osc::BeginBundleImmediate
+        << osc::BeginMessage("/robot/shot")
+        << _id
+        << _shot
+        << osc::EndMessage
+        << osc::EndBundle;
+
+    socket->Send(p.Data(), p.Size());
+}
