@@ -2,9 +2,9 @@
 
 #include <iostream>
 #include <cstring>
-#include <osc/OscReceivedElements.h>
-#include <osc/OscPacketListener.h>
-#include <ip/UdpSocket.h>
+#include <oscpack/osc/OscReceivedElements.h>
+#include <oscpack/osc/OscPacketListener.h>
+#include <oscpack/ip/UdpSocket.h>
 
 #include "../common/RobotData.h"
 #include "../common/Const.h"

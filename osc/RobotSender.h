@@ -2,10 +2,9 @@
 
 #include <iostream>
 #include <string>
-
-#include "osc/OscTypes.h"
-#include "osc/OscOutboundPacketStream.h"
-#include "ip/UdpSocket.h"
+#include <oscpack/osc/OscTypes.h>
+#include <oscpack/osc/OscOutboundPacketStream.h>
+#include <oscpack/ip/UdpSocket.h>
 
 #define OUTPUT_BUFFER_SIZE 1024
 

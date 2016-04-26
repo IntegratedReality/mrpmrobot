@@ -1,7 +1,7 @@
 #include "RobotSender.h"
 
-#include "osc/OscOutboundPacketStream.h"
-#include "ip/UdpSocket.h"
+#include <oscpack/osc/OscOutboundPacketStream.h>
+#include <oscpack/ip/UdpSocket.h>
 
 RobotSender::RobotSender():portname(0),socket(NULL)
 {
