@@ -1,8 +1,8 @@
 #include <limits>
 #include <algorithm>
 #include <iostream>
-#include <Eigen/Core>
-#include <Eigen/Geometry>
+#include <eigen3/Eigen/Core>
+#include <eigen3/Eigen/Geometry>
 #include "operate.h"
 #include "params.h"
 
