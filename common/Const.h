@@ -1,6 +1,6 @@
 #pragma once
 
-constexpr int ID = 0;
+int ID;
 
 constexpr int FPS = 30;
 constexpr double TIME_PER_FRAME = 1.0 / FPS;

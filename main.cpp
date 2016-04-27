@@ -5,6 +5,7 @@
  */
 
 #include <iostream>
+#include <cstdlib>
 #include <array>
 #include <thread>
 #include <mutex>
@@ -24,8 +25,16 @@ using namespace std;
 
 std::mutex mutex_obj;
 
-int main(void)
+extern int ID;
+
+int main(int argc, char **argv)
 {
+	if (argc == 2) ID = atoi(argv[1]);
+	else {
+		cout << "コマンドライン引数でロボットのIDを指定してください。m(__)m" << endl;
+		return 0;
+	}
+
     wiringPiSetupGpio();
     LedUnit led_unit(24);
     led_unit.on();
