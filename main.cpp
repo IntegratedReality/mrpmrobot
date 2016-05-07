@@ -29,6 +29,8 @@ std::mutex mutex_obj;
 extern int ID;
 
 void checkMovable(Position _pos, bool &_F, bool &_B);
+double distance(Position _p1, Position _p2);
+bool hoge(double _ax, double _ay, double _bx, double _by);
 
 int main(int argc, char **argv)
 {
@@ -131,6 +133,10 @@ int main(int argc, char **argv)
     return 0;
 }
 
+Position p1(1800 / 4., 2700 / 4., 0);
+Position p2(2 * 1800 / 4., 2 * 2700 / 4., 0);
+Position p3(3 * 1800 / 4., 3 * 2700 / 4., 0);
+
 void checkMovable(Position _pos, bool &_F, bool &_B) {
     double vx = cos(_pos.theta), vy = sin(_pos.theta);
     _F = true;
@@ -156,4 +162,28 @@ void checkMovable(Position _pos, bool &_F, bool &_B) {
        if (vx < 0) _F = false; 
        else _B = false;
     }
+    // ポイントオブジェクト1
+    if (distance(_pos, p1) < 125 + 50) {
+       if (hoge(vx, vy, p1.x - _pos.x, p1.y - _pos.y)) _F = false;
+       else _B = false;
+    }
+    // ポイントオブジェクト2
+    if (distance(_pos, p2) < 125 + 50) {
+       if (hoge(vx, vy, p2.x - _pos.x, p2.y - _pos.y)) _F = false;
+       else _B = false;
+    }
+    // ポイントオブジェクト3
+    if (distance(_pos, p3) < 125 + 50) {
+       if (hoge(vx, vy, p3.x - _pos.x, p3.y - _pos.y)) _F = false;
+       else _B = false;
+    }
+}
+
+double distance(Position _p1, Position _p2) {
+    return sqrt(pow(_p1.x - _p2.x, 2.) + pow(_p1.y - _p2.y, 2.));
+}
+
+// まじホゲって感じ 
+bool hoge(double _ax, double _ay, double _bx, double _by) {
+    return (_ax * _bx + _ay * _by) > 0;
 }
