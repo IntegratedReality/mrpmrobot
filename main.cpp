@@ -75,28 +75,28 @@ int main(int argc, char **argv)
                 break;
             case TOP_RIGHT:
                 v = max_v;
-                omega = -max_omega;
+                omega = -0.6 * max_omega;
                 break;
             case RIGHT:
-                omega = -max_omega;
+                omega = -4 * max_omega;
                 break;
             case BOTTOM_RIGHT:
                 v = -max_v;
-                omega = max_omega;
+                omega = 0.6 * max_omega;
                 break;
             case BOTTOM:
                 v = -max_v;
                 break;
             case BOTTOM_LEFT:
                 v = -max_v;
-                omega = -max_omega;
+                omega = -0.6 * max_omega;
                 break;
             case LEFT:
-                omega = max_omega;
+                omega = 4 * max_omega;
                 break;
             case TOP_LEFT:
                 v = max_v;
-                omega = max_omega;
+                omega = 0.6 * max_omega;
                 break;
         }
         mutex_obj.lock();
