@@ -12,7 +12,7 @@ void RobotListener::setup(RobotData *_data) {
 
 void RobotListener::ProcessMessage(const osc::ReceivedMessage& m, __attribute__((unused)) const IpEndpointName& remoteEndPoint) {
     try {
-        if(std::strcmp(m.AddressPattern(), "/position") == 0) {
+        if(std::strcmp(m.AddressPattern(), "/main/position") == 0) {
             osc::ReceivedMessageArgumentStream args = m.ArgumentStream();
             osc::int32 id;
             osc::int32 time;

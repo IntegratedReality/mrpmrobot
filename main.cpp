@@ -2,7 +2,7 @@
    Robot's Main ProgramA of MRPM Project
    Dept. of Precision Engneering, U-tokyo
    Seimitsu Lab, Mayfes
- */
+*/
 
 #include <iostream>
 #include <cstdlib>
@@ -65,7 +65,7 @@ int main(int argc, char **argv)
         RobotData data;
         data = receiver.getData(ID);
 
-        double max_v = 0.2, max_omega = 0.005;
+        double max_v = 0.1, max_omega = 0.001;
         double v = 0, omega = 0;
         switch (data.operation.direction) {
             case NO_INPUT:
@@ -104,7 +104,7 @@ int main(int argc, char **argv)
         mutex_obj.unlock();
         // ここまでを弄る
 
-        if (count != 30000000) {
+        if (count != 300000) {
             count++;
             continue;
         }
