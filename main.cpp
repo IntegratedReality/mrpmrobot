@@ -5,6 +5,7 @@
 */
 
 #include <iostream>
+#include <cmath>
 #include <cstdlib>
 #include <array>
 #include <thread>
@@ -26,6 +27,8 @@ using namespace std;
 std::mutex mutex_obj;
 
 extern int ID;
+
+void checkMovable(Position _pos, bool &_F, bool &_B);
 
 int main(int argc, char **argv)
 {
@@ -67,35 +70,40 @@ int main(int argc, char **argv)
 
         double max_v = 0.1, max_omega = 0.001;
         double v = 0, omega = 0;
+
+        // オーバードライブ防止処理
+        bool F, B;
+        checkMovable(data.pos, F, B);
+        
         switch (data.operation.direction) {
             case NO_INPUT:
                 break;
             case TOP:
-                v = max_v;
+                v = (double)F * max_v;
                 break;
             case TOP_RIGHT:
-                v = max_v;
+                v = (double)F * max_v;
                 omega = -0.6 * max_omega;
                 break;
             case RIGHT:
                 omega = -4 * max_omega;
                 break;
             case BOTTOM_RIGHT:
-                v = -max_v;
+                v = -((double)B * max_v);
                 omega = 0.6 * max_omega;
                 break;
             case BOTTOM:
-                v = -max_v;
+                v = -((double)B * max_v);
                 break;
             case BOTTOM_LEFT:
-                v = -max_v;
+                v = -((double)B * max_v);
                 omega = -0.6 * max_omega;
                 break;
             case LEFT:
                 omega = 4 * max_omega;
                 break;
             case TOP_LEFT:
-                v = max_v;
+                v = (double)F * max_v;
                 omega = 0.6 * max_omega;
                 break;
         }
@@ -108,6 +116,7 @@ int main(int argc, char **argv)
             count++;
             continue;
         }
+        cout << F << B << endl;
         cout << "v: " << v << " ";
         cout << "omega: " << omega << " ";
         cout << "x: " << data.pos.x << " ";
@@ -120,4 +129,31 @@ int main(int argc, char **argv)
         count = 0;
     }
     return 0;
+}
+
+void checkMovable(Position _pos, bool &_F, bool &_B) {
+    double vx = cos(_pos.theta), vy = sin(_pos.theta);
+    _F = true;
+    _B = true;
+
+    // フィールド上辺
+    if (_pos.y < 150) {
+       if (vy < 0) _F = false; 
+       else _B = false;
+    } 
+    // 右辺
+    if (_pos.x > 1800 - 150) {
+       if (vx > 0) _F = false; 
+       else _B = false;
+    }
+    // 下辺
+    if (_pos.y > 2700 - 150) {
+       if (vy > 0) _F = false; 
+       else _B = false;
+    }
+    // 左辺
+    if (_pos.x < 150) {
+       if (vx < 0) _F = false; 
+       else _B = false;
+    }
 }
