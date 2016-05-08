@@ -143,37 +143,37 @@ void checkMovable(Position _pos, bool &_F, bool &_B) {
     _B = true;
 
     // フィールド上辺
-    if (_pos.y < 150) {
+    if (_pos.y < 130) {
        if (vy < 0) _F = false; 
        else _B = false;
     } 
     // 右辺
-    if (_pos.x > 1800 - 150) {
+    if (_pos.x > 1800 - 130) {
        if (vx > 0) _F = false; 
        else _B = false;
     }
     // 下辺
-    if (_pos.y > 2700 - 150) {
+    if (_pos.y > 2700 - 130) {
        if (vy > 0) _F = false; 
        else _B = false;
     }
     // 左辺
-    if (_pos.x < 150) {
+    if (_pos.x < 130) {
        if (vx < 0) _F = false; 
        else _B = false;
     }
     // ポイントオブジェクト1
-    if (distance(_pos, p1) < 125 + 50) {
+    if (distance(_pos, p1) < 125 + 100 + 30) {
        if (hoge(vx, vy, p1.x - _pos.x, p1.y - _pos.y)) _F = false;
        else _B = false;
     }
     // ポイントオブジェクト2
-    if (distance(_pos, p2) < 125 + 50) {
+    if (distance(_pos, p2) < 125 + 100 + 30) {
        if (hoge(vx, vy, p2.x - _pos.x, p2.y - _pos.y)) _F = false;
        else _B = false;
     }
     // ポイントオブジェクト3
-    if (distance(_pos, p3) < 125 + 50) {
+    if (distance(_pos, p3) < 125 + 100 + 30) {
        if (hoge(vx, vy, p3.x - _pos.x, p3.y - _pos.y)) _F = false;
        else _B = false;
     }
