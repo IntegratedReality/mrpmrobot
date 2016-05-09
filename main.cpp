@@ -76,16 +76,20 @@ int main(int argc, char **argv)
         // オーバードライブ防止処理
         bool F, B;
         checkMovable(data.pos, F, B);
+
+		bool MoveSURUNO = true;
         
         switch (data.operation.direction) {
             case NO_INPUT:
                 break;
             case TOP:
                 v = (double)F * max_v;
+				MoveSURUNO = F;
                 break;
             case TOP_RIGHT:
                 v = (double)F * max_v;
                 omega = -0.6 * max_omega;
+				MoveSURUNO = F;
                 break;
             case RIGHT:
                 omega = -4 * max_omega;
@@ -93,13 +97,16 @@ int main(int argc, char **argv)
             case BOTTOM_RIGHT:
                 v = -((double)B * max_v);
                 omega = 0.6 * max_omega;
+				MoveSURUNO = B;
                 break;
             case BOTTOM:
                 v = -((double)B * max_v);
+				MoveSURUNO = B;
                 break;
             case BOTTOM_LEFT:
                 v = -((double)B * max_v);
                 omega = -0.6 * max_omega;
+				MoveSURUNO = B;
                 break;
             case LEFT:
                 omega = 4 * max_omega;
@@ -107,10 +114,11 @@ int main(int argc, char **argv)
             case TOP_LEFT:
                 v = (double)F * max_v;
                 omega = 0.6 * max_omega;
+				MoveSURUNO = F;
                 break;
         }
         mutex_obj.lock();
-        drive.setTarget(v, omega);
+        drive.setTarget(v, omega, (MoveSURUNO ? MotorMode::Move : MotorMode::Brake));
         mutex_obj.unlock();
         // ここまでを弄る
 

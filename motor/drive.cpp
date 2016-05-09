@@ -17,10 +17,11 @@ bool DriveClass::updateData(double position_x, double position_y, double positio
     return true;
 }
 
-bool DriveClass::setTarget(double target_velocity, double target_omega)
+bool DriveClass::setTarget(double target_velocity, double target_omega, MotorMode _mode)
 {
     this->target_velocity = target_velocity;
     this->target_omega = target_omega;
+	this->mode = _mode;
     return true;
 }
 
@@ -43,8 +44,8 @@ bool DriveClass::updateDrive(void)
         double ome_duty = target_omega / max_ome * 0.5;
         next_right_duty = vel_duty + ome_duty;
         next_left_duty = vel_duty - ome_duty;
-        this->right_motor.setMotor(MotorMode::Move, next_right_duty);
-        this->left_motor.setMotor(MotorMode::Move, next_left_duty);
+        this->right_motor.setMotor(mode, next_right_duty);
+        this->left_motor.setMotor(mode, next_left_duty);
         return true;
     }
 
