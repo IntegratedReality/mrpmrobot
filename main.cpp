@@ -76,10 +76,10 @@ int main(int argc, char **argv)
 		RobotData data;
 		data = receiver.getData(ID);
 
-		if (ID < 3) {
+		if (ID >= 3) {
 			sender.sendShot(ID, ai.getOperation().shot);
 			for (int i = 0; i < 6; i++) {
-				ai.setRobotData(i, receiver.getData(ID));
+				ai.setRobotData(i, receiver.getData(i));
 			}
 			for (int i = 0; i < 3; i++) {
 				ai.setPOOwner(i, NEUTRAL);
