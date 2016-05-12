@@ -22,7 +22,7 @@ void RobotListener::ProcessMessage(const osc::ReceivedMessage& m, __attribute__(
 			double theta;
 			double HP;
 			double EN;
-			osc::int32 state
+			osc::int32 state;
 
 				args >> id >> time >> x >> y >> theta >> HP >> EN >> state >> osc::EndMessage;
 			data[id].time = time;

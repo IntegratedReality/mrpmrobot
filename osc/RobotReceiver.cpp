@@ -14,7 +14,7 @@ RobotData RobotReceiver::getData(int _id) {
 }
 
 ETeam RobotReceiver::getPOOwner(int _id) {
-	return owner[id];
+	return owner[_id];
 }
 
 bool RobotReceiver::checkMessageReceived(void)
