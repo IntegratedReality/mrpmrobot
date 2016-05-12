@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Const.h"
-#include "Operation.h"
-#include "RobotData.h"
-#include "Position.h"
+#include "../common/Const.h"
+#include "../common/Operation.h"
+#include "../common/RobotData.h"
+#include "../common/Position.h"
 #include "AIParams.h"
 
 class AI {
