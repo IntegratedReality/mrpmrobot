@@ -10,11 +10,12 @@
 #include "../common/Const.h"
 
 class RobotListener : public osc::OscPacketListener {
-public:
-	void setup(RobotData *_data);
-	virtual void ProcessMessage(const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndPoint );
-    bool checkMessageReceived(void);
-private:
-	RobotData *data;
-    bool m_message_received;
+	public:
+		void setup(RobotData *_data, ETeam *_owner);
+		virtual void ProcessMessage(const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndPoint );
+		bool checkMessageReceived(void);
+	private:
+		RobotData *data;
+		ETeam *owner;
+		bool m_message_received;
 };

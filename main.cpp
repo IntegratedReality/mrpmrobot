@@ -82,7 +82,7 @@ int main(int argc, char **argv)
 				ai.setRobotData(i, receiver.getData(ID));
 			}
 			for (int i = 0; i < 3; i++) {
-				ai.setPOOwner(i, NEUTRAL);
+				ai.setPOOwner(i, receiver.getPOOwner(i));
 			}
 			ai.update();
 		}

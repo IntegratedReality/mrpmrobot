@@ -14,15 +14,17 @@
 #define PORT 8000
 
 class RobotReceiver {
-    public:
-        RobotReceiver() : s(IpEndpointName(IpEndpointName::ANY_ADDRESS, PORT), &listener) {}
-        void init();
-        void update();
-        RobotData getData(int _id);
-        bool checkMessageReceived(void);
-    private:
-        std::thread th;
-        RobotListener listener;
-        UdpListeningReceiveSocket s;
-        RobotData data[NUM_OF_ROBOT];
+	public:
+		RobotReceiver() : s(IpEndpointName(IpEndpointName::ANY_ADDRESS, PORT), &listener) {}
+		void init();
+		void update();
+		RobotData getData(int _id);
+		ETeam getPOOwner(int _id);
+		bool checkMessageReceived(void);
+	private:
+		std::thread th;
+		RobotListener listener;
+		UdpListeningReceiveSocket s;
+		RobotData data[NUM_OF_ROBOT];
+		ETeam owner[3];
 };
