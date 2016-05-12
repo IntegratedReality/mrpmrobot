@@ -75,9 +75,9 @@ int main(int argc, char **argv)
 		// ここを弄るといいらしい
 		RobotData data;
 		data = receiver.getData(ID);
-		sender.sendShot(ID, ai.getOperation().shot;)
 
 		if (ID < 3) {
+			sender.sendShot(ID, ai.getOperation().shot);
 			for (int i = 0; i < 6; i++) {
 				ai.setRobotData(i, receiver.getData(ID));
 			}
@@ -150,8 +150,8 @@ int main(int argc, char **argv)
 		cout << "y: " << data.pos.y << " ";
 		cout << "theta: " << data.pos.theta << " ";
 		cout << "time:" << data.time << " ";
-		cout << "drc: " << data.operation.direction << " ";
-		cout << "shot: " << data.operation.shot << " ";
+		cout << "drc: " << (ID < 3 ? data.operation.direction : ai.getOperation().direction) << " ";
+		cout << "shot: " << (ID < 3 ? data.operation.shot : ai.getOperation().shot) << " ";
 		cout << endl;
 		count = 0;
 	}
