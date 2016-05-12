@@ -1,8 +1,8 @@
 /*
-	 Robot's Main ProgramA of MRPM Project
-	 Dept. of Precision Engneering, U-tokyo
-	 Seimitsu Lab, Mayfes
-	 */
+   Robot's Main ProgramA of MRPM Project
+   Dept. of Precision Engneering, U-tokyo
+   Seimitsu Lab, Mayfes
+ */
 
 #include <iostream>
 #include <cmath>
@@ -71,21 +71,21 @@ int main(int argc, char **argv)
 			});
 
 	long count = 0;
+	std::thread ai_thread([&](){
+			while (ID >= 3) {
+			sender.sendShot(ID, ai.getOperation().shot);
+			for (int i = 0; i < 6; i++) {
+			ai.setRobotData(i, receiver.getData(i));
+			}
+			for (int i = 0; i < 3; i++) {
+			ai.setPOOwner(i, receiver.getPOOwner(i));
+			}
+			ai.update();
+			}});
 	while (1) {
 		// ここを弄るといいらしい
 		RobotData data;
 		data = receiver.getData(ID);
-
-		if (ID >= 3) {
-			sender.sendShot(ID, ai.getOperation().shot);
-			for (int i = 0; i < 6; i++) {
-				ai.setRobotData(i, receiver.getData(i));
-			}
-			for (int i = 0; i < 3; i++) {
-				ai.setPOOwner(i, receiver.getPOOwner(i));
-			}
-			ai.update();
-		}
 
 		double max_v = 0.1, max_omega = 0.001;
 		double v = 0, omega = 0;
@@ -109,7 +109,7 @@ int main(int argc, char **argv)
 				MoveSURUNO = F;
 				break;
 			case RIGHT:
-				omega = -4 * max_omega;
+				omega = -2 * max_omega;
 				break;
 			case BOTTOM_RIGHT:
 				v = -((double)B * max_v);
@@ -126,7 +126,7 @@ int main(int argc, char **argv)
 				MoveSURUNO = B;
 				break;
 			case LEFT:
-				omega = 4 * max_omega;
+				omega = 2 * max_omega;
 				break;
 			case TOP_LEFT:
 				v = (double)F * max_v;
@@ -139,7 +139,7 @@ int main(int argc, char **argv)
 		mutex_obj.unlock();
 		// ここまでを弄る
 
-		if (count != 300000) {
+		if (count != 3000) {
 			count++;
 			continue;
 		}
@@ -156,59 +156,59 @@ int main(int argc, char **argv)
 		count = 0;
 	}
 	return 0;
-}
+	}
 
-Position p1(1800 / 4., 2700 / 4., 0);
-Position p2(2 * 1800 / 4., 2 * 2700 / 4., 0);
-Position p3(3 * 1800 / 4., 3 * 2700 / 4., 0);
+	Position p1(1800 / 4., 2700 / 4., 0);
+	Position p2(2 * 1800 / 4., 2 * 2700 / 4., 0);
+	Position p3(3 * 1800 / 4., 3 * 2700 / 4., 0);
 
-void checkMovable(Position _pos, bool &_F, bool &_B) {
-	double vx = cos(_pos.theta), vy = sin(_pos.theta);
-	_F = true;
-	_B = true;
+	void checkMovable(Position _pos, bool &_F, bool &_B) {
+		double vx = cos(_pos.theta), vy = sin(_pos.theta);
+		_F = true;
+		_B = true;
 
-	// フィールド上辺
-	if (_pos.y < 130) {
-		if (vy < 0) _F = false; 
-		else _B = false;
-	} 
-	// 右辺
-	if (_pos.x > 1800 - 130) {
-		if (vx > 0) _F = false; 
-		else _B = false;
+		// フィールド上辺
+		if (_pos.y < 130) {
+			if (vy < 0) _F = false; 
+			else _B = false;
+		} 
+		// 右辺
+		if (_pos.x > 1800 - 130) {
+			if (vx > 0) _F = false; 
+			else _B = false;
+		}
+		// 下辺
+		if (_pos.y > 2700 - 130) {
+			if (vy > 0) _F = false; 
+			else _B = false;
+		}
+		// 左辺
+		if (_pos.x < 130) {
+			if (vx < 0) _F = false; 
+			else _B = false;
+		}
+		// ポイントオブジェクト1
+		if (distance(_pos, p1) < 125 + 100 + 30) {
+			if (hoge(vx, vy, p1.x - _pos.x, p1.y - _pos.y)) _F = false;
+			else _B = false;
+		}
+		// ポイントオブジェクト2
+		if (distance(_pos, p2) < 125 + 100 + 30) {
+			if (hoge(vx, vy, p2.x - _pos.x, p2.y - _pos.y)) _F = false;
+			else _B = false;
+		}
+		// ポイントオブジェクト3
+		if (distance(_pos, p3) < 125 + 100 + 30) {
+			if (hoge(vx, vy, p3.x - _pos.x, p3.y - _pos.y)) _F = false;
+			else _B = false;
+		}
 	}
-	// 下辺
-	if (_pos.y > 2700 - 130) {
-		if (vy > 0) _F = false; 
-		else _B = false;
-	}
-	// 左辺
-	if (_pos.x < 130) {
-		if (vx < 0) _F = false; 
-		else _B = false;
-	}
-	// ポイントオブジェクト1
-	if (distance(_pos, p1) < 125 + 100 + 30) {
-		if (hoge(vx, vy, p1.x - _pos.x, p1.y - _pos.y)) _F = false;
-		else _B = false;
-	}
-	// ポイントオブジェクト2
-	if (distance(_pos, p2) < 125 + 100 + 30) {
-		if (hoge(vx, vy, p2.x - _pos.x, p2.y - _pos.y)) _F = false;
-		else _B = false;
-	}
-	// ポイントオブジェクト3
-	if (distance(_pos, p3) < 125 + 100 + 30) {
-		if (hoge(vx, vy, p3.x - _pos.x, p3.y - _pos.y)) _F = false;
-		else _B = false;
-	}
-}
 
-double distance(Position _p1, Position _p2) {
-	return sqrt(pow(_p1.x - _p2.x, 2.) + pow(_p1.y - _p2.y, 2.));
-}
+	double distance(Position _p1, Position _p2) {
+		return sqrt(pow(_p1.x - _p2.x, 2.) + pow(_p1.y - _p2.y, 2.));
+	}
 
-// まじホゲって感じ 
-bool hoge(double _ax, double _ay, double _bx, double _by) {
-	return (_ax * _bx + _ay * _by) > 0;
-}
+	// まじホゲって感じ 
+	bool hoge(double _ax, double _ay, double _bx, double _by) {
+		return (_ax * _bx + _ay * _by) > 0;
+	}

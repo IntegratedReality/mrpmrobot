@@ -24,7 +24,7 @@ void RobotListener::ProcessMessage(const osc::ReceivedMessage& m, __attribute__(
 			double EN;
 			osc::int32 state;
 
-				args >> id >> time >> x >> y >> theta >> HP >> EN >> state >> osc::EndMessage;
+			args >> id >> time >> x >> y >> theta >> HP >> EN >> state >> osc::EndMessage;
 			data[id].time = time;
 			data[id].pos.x = x;
 			data[id].pos.y = y;
@@ -32,6 +32,7 @@ void RobotListener::ProcessMessage(const osc::ReceivedMessage& m, __attribute__(
 			data[id].HP = HP;
 			data[id].EN = EN;
 			data[id].state = (EState)state;
+			data[id].team = id < 3 ? TEAM_A : TEAM_B;
 		} else if (std::strcmp(m.AddressPattern(), "/main/poowner") == 0) {
 			osc::ReceivedMessageArgumentStream args = m.ArgumentStream();
 			osc::int32 id;
