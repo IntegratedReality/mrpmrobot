@@ -43,10 +43,12 @@ void RobotListener::ProcessMessage(const osc::ReceivedMessage& m, __attribute__(
 			owner[id] = (ETeam)team;
 		} else if (std::strcmp(m.AddressPattern(), "/controller/operation") == 0) {
 			osc::ReceivedMessageArgumentStream args = m.ArgumentStream();
+			bool isAI;
 			osc::int32 drc;
 			bool shot;
 
-			args >> drc >> shot >> osc::EndMessage;
+			args >> isAI >> drc >> shot >> osc::EndMessage;
+			data[ID].isAI = isAI;
 			data[ID].operation.direction = (EDirection)drc;
 			data[ID].operation.shot = shot;
 		}
