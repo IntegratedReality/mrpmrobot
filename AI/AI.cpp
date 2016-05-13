@@ -90,14 +90,12 @@ void AI::developDodgeRoute() {
     mypos.x = data[Myid].pos.x;
     mypos.y = data[Myid].pos.y;
     mypos.theta = data[Myid].pos.theta;
-    //std::cout << "id:" << Myid << "  "; 
 
     this->operation.direction = NO_INPUT;
     this->operation.shot = false;
 
     double minScore;
     for(int i = 1; i < 9; i++) {
-        if(i >= 4 && i <= 7) continue;
         Position nextpos;
         nextpos.x = mypos.x + DIFF_MOVE * cos(mypos.theta + (M_PI / 4) * (i-1));
         nextpos.y = mypos.y + DIFF_MOVE * sin(mypos.theta + (M_PI / 4) * (i-1));
@@ -113,7 +111,7 @@ void AI::developDodgeRoute() {
             double dx = POPos[i].x - nextpos.x;
             double dy = POPos[i].y - nextpos.y;
             double diff2 = dx * dx + dy * dy;
-            obstscore += RATE_OF_OBST * exp(- diff2 / RATE_OF_LENGTH_O);
+            if(target.x != POPos[i].x) obstscore += RATE_OF_OBST * exp(- diff2 / RATE_OF_LENGTH_O);
         }
         for(int i = 0; i < NUM_OF_ROBOT; i++){
             double dx = data[i].pos.x - nextpos.x;
@@ -125,11 +123,13 @@ void AI::developDodgeRoute() {
         //Potensial function
         nextscore = (obstscore / RATE_OF_TARGET + 1) * targetscore; 
         //nextscore = obstscore + targetscore;
-        //std::cout << nextscore << " ";
         if(i == 1) minScore = nextscore;
         if(nextscore <= minScore){
             if(dx * dx + dy * dy > DIST_TO_TARGET * DIST_TO_TARGET){
-                this->operation.direction = (EDirection)i;
+                if((EDirection)i == BOTTOM_RIGHT || (EDirection)i == BOTTOM) this->operation.direction = RIGHT;
+                else if((EDirection)i == BOTTOM_LEFT) this->operation.direction = LEFT;
+                else this->operation.direction = (EDirection)i;
+                 
             }else{
                 if((EDirection)i == TOP_RIGHT || (EDirection)i == RIGHT){
                     this->operation.direction = RIGHT;
@@ -155,17 +155,13 @@ void AI::developDodgeRoute() {
                         this->operation.direction = LEFT;
                     }else{
                         this->operation.direction = NO_INPUT;
+                        this->operation.shot = true;
                     }
                 }
             }
             minScore = nextscore;
         }
-        if(dx * dx + dy * dy < DIST_TO_TARGET * DIST_TO_TARGET){
-            //std::cout << " Near ";
-            this->operation.shot = true;
-        }
     }
-    //std::cout << " dir:" << this->operation.direction << std::endl;
 }
 
 
@@ -177,12 +173,11 @@ void AI::developSimpleStrategy() {
     for(int i = 0; i < NUM_OF_POINT_OBJ; i++){
         double dx = POPos[i].x - myposx;
         double dy = POPos[i].y - myposy;
-		std::cout << "dx:" << dx << " dy:" << dy << std::endl;
         double diff2 = dx * dx + dy * dy;
         if(i == 0){
             mindiff = diff2;
-        }else if( owner[i] != data[Myid].team){
-            mindiff = diff2;
+        }else if(owner[i] != data[Myid].team){
+            if(mindiff > diff2) mindiff = diff2;
             target = POPos[i];
         }
     }
@@ -196,7 +191,8 @@ void AI::developSimpleStrategy() {
             mindiff = diff2;
             target = data[i].pos;
         }
-    } 
-	std::cout << "target:" << target.x << " " << target.y << std::endl;
+    }
 }
+
+
 
