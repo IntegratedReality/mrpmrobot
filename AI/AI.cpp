@@ -52,8 +52,8 @@ void AI::developRandomRoute() {
 
 void AI::developDirectRoute() {
     //move to target directly
-    int myposx = data[Myid].pos.x;
-    int myposy = data[Myid].pos.y;
+    double myposx = data[Myid].pos.x;
+    double myposy = data[Myid].pos.y;
     double myposth = data[Myid].pos.theta;
     double dx = target.x - myposx;
     double dy = target.y - myposy;
@@ -90,7 +90,7 @@ void AI::developDodgeRoute() {
     mypos.x = data[Myid].pos.x;
     mypos.y = data[Myid].pos.y;
     mypos.theta = data[Myid].pos.theta;
-    std::cout << "id:" << Myid << "  "; 
+    //std::cout << "id:" << Myid << "  "; 
 
     this->operation.direction = NO_INPUT;
     this->operation.shot = false;
@@ -125,7 +125,7 @@ void AI::developDodgeRoute() {
         //Potensial function
         nextscore = (obstscore / RATE_OF_TARGET + 1) * targetscore; 
         //nextscore = obstscore + targetscore;
-        std::cout << nextscore << " ";
+        //std::cout << nextscore << " ";
         if(i == 1) minScore = nextscore;
         if(nextscore <= minScore){
             if(dx * dx + dy * dy > DIST_TO_TARGET * DIST_TO_TARGET){
@@ -161,26 +161,27 @@ void AI::developDodgeRoute() {
             minScore = nextscore;
         }
         if(dx * dx + dy * dy < DIST_TO_TARGET * DIST_TO_TARGET){
-            std::cout << " Near ";
+            //std::cout << " Near ";
             this->operation.shot = true;
         }
     }
-    std::cout << " dir:" << this->operation.direction << std::endl;
+    //std::cout << " dir:" << this->operation.direction << std::endl;
 }
 
 
 void AI::developSimpleStrategy() {
-    int myposx = data[Myid].pos.x;
-    int myposy = data[Myid].pos.y;
+    double myposx = data[Myid].pos.x;
+    double myposy = data[Myid].pos.y;
     target = POPos[0];
-    int mindiff = 0;
+    double mindiff = 0;
     for(int i = 0; i < NUM_OF_POINT_OBJ; i++){
-        int dx = POPos[i].x - myposx;
-        int dy = POPos[i].y - myposy;
-        int diff2 = dx * dx + dy * dy;
+        double dx = POPos[i].x - myposx;
+        double dy = POPos[i].y - myposy;
+		std::cout << "dx:" << dx << " dy:" << dy << std::endl;
+        double diff2 = dx * dx + dy * dy;
         if(i == 0){
             mindiff = diff2;
-        }else if(mindiff > diff2 && owner[i] != data[Myid].team){
+        }else if( owner[i] != data[Myid].team){
             mindiff = diff2;
             target = POPos[i];
         }
@@ -188,13 +189,14 @@ void AI::developSimpleStrategy() {
     for(int i = 0; i < NUM_OF_ROBOT; i++){
         if(data[i].team == data[Myid].team) continue;
         if(data[i].state != NORMAL) continue;
-        int dx = data[i].pos.x - myposx;
-        int dy = data[i].pos.y - myposy;
-        int diff2 = dx * dx + dy * dy;
+        double dx = data[i].pos.x - myposx;
+        double dy = data[i].pos.y - myposy;
+        double diff2 = dx * dx + dy * dy;
         if(mindiff > diff2){
             mindiff = diff2;
             target = data[i].pos;
         }
     } 
+	std::cout << "target:" << target.x << " " << target.y << std::endl;
 }
 
