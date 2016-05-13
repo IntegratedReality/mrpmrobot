@@ -2,7 +2,7 @@
    Robot's Main ProgramA of MRPM Project
    Dept. of Precision Engneering, U-tokyo
    Seimitsu Lab, Mayfes
- */
+*/
 
 #include <iostream>
 #include <cmath>
@@ -65,7 +65,7 @@ int main(int argc, char **argv)
 			mutex_obj.lock();
 			drive.updateData(receiver.getData(ID).pos.x, receiver.getData(ID).pos.y, receiver.getData(ID).pos.theta, receiver.getData(ID).time);
 			drive.updateDrive();
-			if (ID < 3) sender.sendShot(ID, receiver.getData(ID).operation.shot);
+			if (ID < 3 || receiver.getData(ID).state == DEAD || receiver.getData(ID).state == STANDBY) sender.sendShot(ID, receiver.getData(ID).operation.shot);
 			mutex_obj.unlock();
 			}
 			});
@@ -73,7 +73,7 @@ int main(int argc, char **argv)
 	long count = 0;
 	std::thread ai_thread([&](){
 			while (ID >= 3) {
-			sender.sendShot(ID, ai.getOperation().shot);
+			if (receiver.getData(ID).state == DEAD || receiver.getData(ID).state == STANDBY) sender.sendShot(ID, ai.getOperation().shot);
 			for (int i = 0; i < 6; i++) {
 			ai.setRobotData(i, receiver.getData(i));
 			}
@@ -134,6 +134,9 @@ int main(int argc, char **argv)
 				MoveSURUNO = F;
 				break;
 		}
+
+		if (data.state == DEAD || data.state == STANDBY) MoveSURUNO = false;
+
 		mutex_obj.lock();
 		drive.setTarget(v, omega, (MoveSURUNO ? MotorMode::Move : MotorMode::Brake));
 		mutex_obj.unlock();
