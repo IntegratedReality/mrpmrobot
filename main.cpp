@@ -65,15 +65,16 @@ int main(int argc, char **argv)
 			mutex_obj.lock();
 			drive.updateData(receiver.getData(ID).pos.x, receiver.getData(ID).pos.y, receiver.getData(ID).pos.theta, receiver.getData(ID).time);
 			drive.updateDrive();
-			if (ID < 3 || receiver.getData(ID).state == DEAD || receiver.getData(ID).state == STANDBY) sender.sendShot(ID, receiver.getData(ID).operation.shot);
+			if (ID < 3 && !(receiver.getData(ID).isAI || receiver.getData(ID).state == DEAD || receiver.getData(ID).state == STANDBY)) sender.sendShot(ID, receiver.getData(ID).operation.shot);
 			mutex_obj.unlock();
 			}
 			});
+	robot_control_thread.detach();
 
 	long count = 0;
 	std::thread ai_thread([&](){
-			while (ID >= 3) {
-			if (receiver.getData(ID).state == DEAD || receiver.getData(ID).state == STANDBY) sender.sendShot(ID, ai.getOperation().shot);
+			while (ID >= 3 || receiver.getData(ID).isAI) {
+			if (!(receiver.getData(ID).state == DEAD || receiver.getData(ID).state == STANDBY)) sender.sendShot(ID, ai.getOperation().shot);
 			for (int i = 0; i < 6; i++) {
 			ai.setRobotData(i, receiver.getData(i));
 			}
@@ -82,6 +83,8 @@ int main(int argc, char **argv)
 			}
 			ai.update();
 			}});
+	ai_thread.detach();
+
 	while (1) {
 		// ここを弄るといいらしい
 		RobotData data;
