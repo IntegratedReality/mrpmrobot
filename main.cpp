@@ -99,6 +99,8 @@ int main(int argc, char **argv)
 
 		bool MoveSURUNO = true;
 
+        double ofsetRotate = 2.0;
+        double ofsetMoving = 1.0;
 		switch (ID < 3 && !data.isAI ? data.operation.direction : ai.getOperation().direction) {
 			case NO_INPUT:
 				break;
@@ -108,15 +110,15 @@ int main(int argc, char **argv)
 				break;
 			case TOP_RIGHT:
 				v = (double)F * max_v;
-				omega = -0.6 * max_omega;
+				omega = -ofsetMoving * max_omega;
 				MoveSURUNO = F;
 				break;
 			case RIGHT:
-				omega = -2 * max_omega;
+				omega = -ofsetRotate * max_omega;
 				break;
 			case BOTTOM_RIGHT:
 				v = -((double)B * max_v);
-				omega = 0.6 * max_omega;
+				omega = ofsetMoving * max_omega;
 				MoveSURUNO = B;
 				break;
 			case BOTTOM:
@@ -125,15 +127,15 @@ int main(int argc, char **argv)
 				break;
 			case BOTTOM_LEFT:
 				v = -((double)B * max_v);
-				omega = -0.6 * max_omega;
+				omega = -ofsetMoving * max_omega;
 				MoveSURUNO = B;
 				break;
 			case LEFT:
-				omega = 2 * max_omega;
+				omega = ofsetRotate * max_omega;
 				break;
 			case TOP_LEFT:
 				v = (double)F * max_v;
-				omega = 0.6 * max_omega;
+				omega = ofsetMoving * max_omega;
 				MoveSURUNO = F;
 				break;
 		}

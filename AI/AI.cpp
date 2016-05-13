@@ -17,8 +17,8 @@ void AI::init(int _myid) {
 }
 
 void AI::update() {
-    if(estr == SIMPLE) developSimpleStrategy();
-    //target = POPos[0];
+    //if(estr == SIMPLE) developSimpleStrategy();
+    target = POPos[0];
 
     if(erou == DIRECT) developDirectRoute();
     else if(erou == DODGE) developDodgeRoute();
