@@ -96,7 +96,7 @@ int main(int argc, char **argv)
 
 		bool MoveSURUNO = true;
 
-		switch (ID < 3 ? data.operation.direction : ai.getOperation().direction) {
+		switch (ID < 3 && !data.isAI ? data.operation.direction : ai.getOperation().direction) {
 			case NO_INPUT:
 				break;
 			case TOP:
@@ -135,10 +135,11 @@ int main(int argc, char **argv)
 				break;
 		}
 
-		if (data.state == DEAD || data.state == STANDBY) MoveSURUNO = false;
+		bool active = true;
+		if (data.state == DEAD || data.state == STANDBY) active = false;
 
 		mutex_obj.lock();
-		drive.setTarget(v, omega, (MoveSURUNO ? MotorMode::Move : MotorMode::Brake));
+		drive.setTarget((int)active * v, (int)active * omega, (MoveSURUNO ? MotorMode::Move : MotorMode::Brake));
 		mutex_obj.unlock();
 		// ここまでを弄る
 

@@ -16,6 +16,7 @@ struct RobotData {
 	long time;
 	double HP;
 	double EN;
+	bool isAI;
 	void init() {
 		id = 0;
 		pos.x = 0;
@@ -25,5 +26,6 @@ struct RobotData {
 		operation.direction = (EDirection)0;
 		operation.shot = false;
 		time = 0;
+		isAI = false;
 	}
 };
