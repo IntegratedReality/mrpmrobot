@@ -99,7 +99,7 @@ int main(int argc, char **argv)
 
 		bool MoveSURUNO = true;
 
-		switch (ID < 3 && !data.isAI ? data.operation.direction : ai.getOperation().direction) {
+		switch ((ID < 3 && !data.isAI) ? data.operation.direction : ai.getOperation().direction) {
 			case NO_INPUT:
 				break;
 			case TOP:
@@ -150,14 +150,14 @@ int main(int argc, char **argv)
 			count++;
 			continue;
 		}
-		cout << F << B << endl;
+	//	cout << F << B << endl;
 		cout << "v: " << v << " ";
 		cout << "omega: " << omega << " ";
 		cout << "x: " << data.pos.x << " ";
 		cout << "y: " << data.pos.y << " ";
 		cout << "theta: " << data.pos.theta << " ";
-		cout << "time:" << data.time << " ";
-		cout << "player: " << ((ID < 3 && !data.isAI) ? "HUMAN" : "AI") << " ";
+		cout << "time: " << data.time << " ";
+		cout << "isAI: " << data.isAI << " ";
 		cout << "state: " << data.state << " ";
 		cout << "drc: " << ((ID < 3 && !data.isAI) ? data.operation.direction : ai.getOperation().direction) << " ";
 		cout << "shot: " << ((ID < 3 && !data.isAI) ? data.operation.shot : ai.getOperation().shot) << " ";
