@@ -157,8 +157,9 @@ int main(int argc, char **argv)
 		cout << "y: " << data.pos.y << " ";
 		cout << "theta: " << data.pos.theta << " ";
 		cout << "time:" << data.time << " ";
-		cout << "drc: " << (ID < 3 ? data.operation.direction : ai.getOperation().direction) << " ";
-		cout << "shot: " << (ID < 3 ? data.operation.shot : ai.getOperation().shot) << " ";
+		cout << "player: " << ((ID < 3 && !data.isAI) ? "HUMAN" : "AI");
+		cout << "drc: " << ((ID < 3 && !data.isAI) ? data.operation.direction : ai.getOperation().direction) << " ";
+		cout << "shot: " << ((ID < 3 && !data.isAI) ? data.operation.shot : ai.getOperation().shot) << " ";
 		cout << endl;
 		count = 0;
 	}
