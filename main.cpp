@@ -81,13 +81,13 @@ int main(int argc, char **argv)
 	long count = 0;
 	std::thread ai_thread([&](){
 		while (ID >= 3 || receiver.getData(ID).isAI) {
-			static bool last_shot_state = receiver.getData(ID).operation.shot;
+			static bool last_shot_state = ai.getOperation().shot;
 			if (!(receiver.getData(ID).state == DEAD || receiver.getData(ID).state == STANDBY)) {
 				if (last_shot_state != receiver.getData(ID).operation.shot) {
 					sender.sendShot(ID, ai.getOperation().shot);
 				}
 			}
-			last_shot_state = receiver.getData(ID).operation.shot;
+			last_shot_state = ai.getOperation().shot;
 			for (int i = 0; i < 6; i++) {
 			ai.setRobotData(i, receiver.getData(i));
 			}
