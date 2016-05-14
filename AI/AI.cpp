@@ -5,7 +5,7 @@
 
 void AI::init(int _myid) {
     Myid = _myid;
-    erou = DIRECT;
+    erou = DODGE;
     estr = SIMPLE;
     POPos[0].x = POINT_OBJ_0_X;
     POPos[0].y = POINT_OBJ_0_Y;
@@ -19,6 +19,7 @@ void AI::init(int _myid) {
 void AI::update() {
     if(estr == SIMPLE) developSimpleStrategy();
     //target = POPos[0];
+	std::cout << "x:" << target.x << " y:" << target.y << std::endl;
 
     if(erou == DIRECT) developDirectRoute();
     else if(erou == DODGE) developDodgeRoute();
@@ -77,10 +78,17 @@ void AI::developDirectRoute() {
         else if(angle_diff >= LIMIT_TL_LEFT) mydir = TOP_LEFT;
         else mydir = LEFT;
     }else{
-        if(angle_diff > LIMIT_TOP_TR) mydir = RIGHT;
-        else if(angle_diff < LIMIT_TOP_TL) mydir = LEFT;
+		static bool move = false;
+		if (move) {
+        	if(angle_diff > LIMIT_TOP_TR) mydir = RIGHT;
+        	else if(angle_diff < LIMIT_TOP_TL) mydir = LEFT;
+			move = false;
+		} else {
+			mydir = NO_INPUT; 
+			move = true;
+		}
     }
-    
+   
 	this->operation.direction = mydir;
 	this->operation.shot = myshot;
 }

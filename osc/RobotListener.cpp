@@ -27,6 +27,7 @@ void RobotListener::ProcessMessage(const osc::ReceivedMessage& m, __attribute__(
 			args >> id >> time >> x >> y >> theta >> HP >> EN >> state >> osc::EndMessage;
 			data[id].id = id;
 			data[id].time = time;
+			//cout << time << endl;
 			data[id].pos.x = x;
 			data[id].pos.y = y;
 			data[id].pos.theta = theta;
