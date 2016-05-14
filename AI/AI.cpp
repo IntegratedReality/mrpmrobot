@@ -177,7 +177,6 @@ void AI::developSimpleStrategy() {
     for(int i = 0; i < NUM_OF_POINT_OBJ; i++){
         double dx = POPos[i].x - myposx;
         double dy = POPos[i].y - myposy;
-		std::cout << "dx:" << dx << " dy:" << dy << std::endl;
         double diff2 = dx * dx + dy * dy;
         if(i == 0){
             mindiff = diff2;
@@ -197,6 +196,5 @@ void AI::developSimpleStrategy() {
             target = data[i].pos;
         }
     } 
-	std::cout << "target:" << target.x << " " << target.y << std::endl;
 }
 
