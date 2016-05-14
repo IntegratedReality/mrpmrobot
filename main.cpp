@@ -115,7 +115,7 @@ int main(int argc, char **argv)
 				MoveSURUNO = F;
 				break;
 			case RIGHT:
-				omega = -ofsetRotate * max_omega;
+				omega = -3 * max_omega;
 				break;
 			case BOTTOM_RIGHT:
 				v = -((double)B * max_v);
@@ -132,7 +132,7 @@ int main(int argc, char **argv)
 				MoveSURUNO = B;
 				break;
 			case LEFT:
-				omega = ofsetRotate * max_omega;
+				omega = 3 * max_omega;
 				break;
 			case TOP_LEFT:
 				v = (double)F * max_v;
