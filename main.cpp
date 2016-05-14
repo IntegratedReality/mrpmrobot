@@ -67,15 +67,12 @@ int main(int argc, char **argv)
 			drive.updateData(receiver.getData(ID).pos.x, receiver.getData(ID).pos.y, receiver.getData(ID).pos.theta, receiver.getData(ID).time);
 			drive.updateDrive();
 			static bool last_shot_state = receiver.getData(ID).operation.shot;
-			static uint8_t counter = 0;
 			if (ID < 3 && !(receiver.getData(ID).isAI || receiver.getData(ID).state == DEAD || receiver.getData(ID).state == STANDBY)) {
-				if (last_shot_state != receiver.getData(ID).operation.shot || counter > 100) {
-					counter = 0;
+				if (last_shot_state != receiver.getData(ID).operation.shot) {
 					sender.sendShot(ID, receiver.getData(ID).operation.shot);
 				}
 			}
 			last_shot_state = receiver.getData(ID).operation.shot;
-			counter++;
 			mutex_obj.unlock();
 		}
 	});
@@ -85,15 +82,12 @@ int main(int argc, char **argv)
 	std::thread ai_thread([&](){
 		while (ID >= 3 || receiver.getData(ID).isAI) {
 			static bool last_shot_state = ai.getOperation().shot;
-			static uint8_t counter = 0;
 			if (!(receiver.getData(ID).state == DEAD || receiver.getData(ID).state == STANDBY)) {
-				if (last_shot_state != receiver.getData(ID).operation.shot || counter > 100) {
+				if (last_shot_state != receiver.getData(ID).operation.shot) {
 					sender.sendShot(ID, ai.getOperation().shot);
-					counter = 0;
 				}
 			}
 			last_shot_state = ai.getOperation().shot;
-			counter++;
 			for (int i = 0; i < 6; i++) {
 			ai.setRobotData(i, receiver.getData(i));
 			}
@@ -128,7 +122,7 @@ int main(int argc, char **argv)
 
 		bool MoveSURUNO = true;
 
-        double ofsetRotate = 2.0;
+        double ofsetRotate = 2.7;
         double ofsetMoving = 1.0;
 		switch (ID < 3 && !data.isAI ? data.operation.direction : ai.getOperation().direction) {
 			case NO_INPUT:
@@ -143,7 +137,7 @@ int main(int argc, char **argv)
 				MoveSURUNO = F;
 				break;
 			case RIGHT:
-				omega = -3 * max_omega;
+				omega = - ofsetRotate * max_omega;
 				break;
 			case BOTTOM_RIGHT:
 				v = -((double)B * max_v);
@@ -160,7 +154,7 @@ int main(int argc, char **argv)
 				MoveSURUNO = B;
 				break;
 			case LEFT:
-				omega = 3 * max_omega;
+				omega = ofsetRotate * max_omega;
 				break;
 			case TOP_LEFT:
 				v = (double)F * max_v;
