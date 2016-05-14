@@ -67,12 +67,15 @@ int main(int argc, char **argv)
 			drive.updateData(receiver.getData(ID).pos.x, receiver.getData(ID).pos.y, receiver.getData(ID).pos.theta, receiver.getData(ID).time);
 			drive.updateDrive();
 			static bool last_shot_state = receiver.getData(ID).operation.shot;
+			static uint8_t counter = 0;
 			if (ID < 3 && !(receiver.getData(ID).isAI || receiver.getData(ID).state == DEAD || receiver.getData(ID).state == STANDBY)) {
-				if (last_shot_state != receiver.getData(ID).operation.shot) {
+				if (last_shot_state != receiver.getData(ID).operation.shot || counter > 100) {
+					counter = 0;
 					sender.sendShot(ID, receiver.getData(ID).operation.shot);
 				}
 			}
 			last_shot_state = receiver.getData(ID).operation.shot;
+			counter++;
 			mutex_obj.unlock();
 		}
 	});
@@ -82,12 +85,15 @@ int main(int argc, char **argv)
 	std::thread ai_thread([&](){
 		while (ID >= 3 || receiver.getData(ID).isAI) {
 			static bool last_shot_state = ai.getOperation().shot;
+			static uint8_t counter = 0;
 			if (!(receiver.getData(ID).state == DEAD || receiver.getData(ID).state == STANDBY)) {
-				if (last_shot_state != receiver.getData(ID).operation.shot) {
+				if (last_shot_state != receiver.getData(ID).operation.shot || counter > 100) {
 					sender.sendShot(ID, ai.getOperation().shot);
+					counter = 0;
 				}
 			}
 			last_shot_state = ai.getOperation().shot;
+			counter++;
 			for (int i = 0; i < 6; i++) {
 			ai.setRobotData(i, receiver.getData(i));
 			}
