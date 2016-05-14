@@ -61,21 +61,33 @@ int main(int argc, char **argv)
 	DriveClass drive(MotorClass(22, 27, false), MotorClass(17, 18, true), receiver.getData(ID).pos.x, receiver.getData(ID).pos.y, receiver.getData(ID).pos.theta, receiver.getData(ID).time);
 
 	std::thread robot_control_thread([&](){
-			while (true) {
+		while (true) {
 			while (!receiver.checkMessageReceived());
 			mutex_obj.lock();
 			drive.updateData(receiver.getData(ID).pos.x, receiver.getData(ID).pos.y, receiver.getData(ID).pos.theta, receiver.getData(ID).time);
 			drive.updateDrive();
-			if (ID < 3 && !(receiver.getData(ID).isAI || receiver.getData(ID).state == DEAD || receiver.getData(ID).state == STANDBY)) sender.sendShot(ID, receiver.getData(ID).operation.shot);
-			mutex_obj.unlock();
+			static bool last_shot_state = receiver.getData(ID).operation.shot;
+			if (ID < 3 && !(receiver.getData(ID).isAI || receiver.getData(ID).state == DEAD || receiver.getData(ID).state == STANDBY)) {
+				if (last_shot_state != receiver.getData(ID).operation.shot) {
+					sender.sendShot(ID, receiver.getData(ID).operation.shot);
+				}
 			}
-			});
+			last_shot_state = receiver.getData(ID).operation.shot;
+			mutex_obj.unlock();
+		}
+	});
 	robot_control_thread.detach();
 
 	long count = 0;
 	std::thread ai_thread([&](){
-			while (ID >= 3 || receiver.getData(ID).isAI) {
-			if (!(receiver.getData(ID).state == DEAD || receiver.getData(ID).state == STANDBY)) sender.sendShot(ID, ai.getOperation().shot);
+		while (ID >= 3 || receiver.getData(ID).isAI) {
+			static bool last_shot_state = receiver.getData(ID).operation.shot;
+			if (!(receiver.getData(ID).state == DEAD || receiver.getData(ID).state == STANDBY)) {
+				if (last_shot_state != receiver.getData(ID).operation.shot) {
+					sender.sendShot(ID, ai.getOperation().shot);
+				}
+			}
+			last_shot_state = receiver.getData(ID).operation.shot;
 			for (int i = 0; i < 6; i++) {
 			ai.setRobotData(i, receiver.getData(i));
 			}
@@ -83,13 +95,22 @@ int main(int argc, char **argv)
 			ai.setPOOwner(i, receiver.getPOOwner(i));
 			}
 			ai.update();
-			}
-			});
+		}
+	});
 	ai_thread.detach();
 
 	while (1) {
 		// ここを弄るといいらしい
-		RobotData data;
+
+/*			if (!(receiver.getData(ID).state == DEAD || receiver.getData(ID).state == STANDBY)) sender.sendShot(ID, ai.getOperation().shot);
+			for (int i = 0; i < 6; i++) {
+				ai.setRobotData(i, receiver.getData(i));
+			}
+			for (int i = 0; i < 3; i++) {
+				ai.setPOOwner(i, receiver.getPOOwner(i));
+			}
+			ai.update();
+*/		RobotData data;
 		data = receiver.getData(ID);
 
 		double max_v = 0.1, max_omega = 0.001;
