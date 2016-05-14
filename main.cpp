@@ -1,8 +1,8 @@
 /*
-	 Robot's Main ProgramA of MRPM Project
-	 Dept. of Precision Engneering, U-tokyo
-	 Seimitsu Lab, Mayfes
-	 */
+   Robot's Main ProgramA of MRPM Project
+   Dept. of Precision Engneering, U-tokyo
+   Seimitsu Lab, Mayfes
+ */
 
 #include <iostream>
 #include <cmath>
@@ -72,18 +72,21 @@ int main(int argc, char **argv)
 	robot_control_thread.detach();
 
 	long count = 0;
-
-	while (1) {
-		if (ID >= 3 || receiver.getData(ID).isAI) {
+	std::thread ai_thread([&](){
+			while (ID >= 3 || receiver.getData(ID).isAI) {
 			if (!(receiver.getData(ID).state == DEAD || receiver.getData(ID).state == STANDBY)) sender.sendShot(ID, ai.getOperation().shot);
 			for (int i = 0; i < 6; i++) {
-				ai.setRobotData(i, receiver.getData(i));
+			ai.setRobotData(i, receiver.getData(i));
 			}
 			for (int i = 0; i < 3; i++) {
-				ai.setPOOwner(i, receiver.getPOOwner(i));
+			ai.setPOOwner(i, receiver.getPOOwner(i));
 			}
 			ai.update();
-		};
+			}
+			});
+	ai_thread.detach();
+
+	while (1) {
 		// ここを弄るといいらしい
 		RobotData data;
 		data = receiver.getData(ID);
@@ -148,7 +151,7 @@ int main(int argc, char **argv)
 			count++;
 			continue;
 		}
-	//	cout << F << B << endl;
+		//	cout << F << B << endl;
 		cout << "v: " << v << " ";
 		cout << "omega: " << omega << " ";
 		cout << "x: " << data.pos.x << " ";
