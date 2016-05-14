@@ -10,6 +10,7 @@
 #include <array>
 #include <thread>
 #include <mutex>
+#include "unistd.h"
 
 using namespace std;
 
@@ -166,6 +167,8 @@ int main(int argc, char **argv)
 		cout << "shot: " << ((ID < 3 && !data.isAI) ? data.operation.shot : ai.getOperation().shot) << " ";
 		cout << endl;
 		count = 0;
+
+		usleep(10000);
 	}
 	return 0;
 }
