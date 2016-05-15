@@ -83,7 +83,7 @@ int main(int argc, char **argv)
 		while (ID >= 3 || receiver.getData(ID).isAI) {
 			static bool last_shot_state = ai.getOperation().shot;
 			if (!(receiver.getData(ID).state == DEAD || receiver.getData(ID).state == STANDBY)) {
-				if (last_shot_state != receiver.getData(ID).operation.shot) {
+				if (last_shot_state != ai.getOperation().shot) {
 					sender.sendShot(ID, ai.getOperation().shot);
 				}
 			}
