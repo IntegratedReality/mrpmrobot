@@ -48,7 +48,7 @@ Operation AI::getOperation() {
 
 void AI::developRandomRoute() {
 	    this->operation.direction = (EDirection)(rand() % 9);
-	    this->operation.shot = !(rand() % 30);
+	    this->operation.shot = !(rand() % 3000000);
 }
 
 void AI::developDirectRoute() {
@@ -91,7 +91,7 @@ void AI::developDirectRoute() {
    
 	this->operation.direction = mydir;
 	this->operation.shot = myshot;
-	    this->operation.shot = !(rand() % 30);
+	    this->operation.shot = !(rand() % 3000000);
 }
 
 void AI::developDodgeRoute() {
@@ -171,7 +171,7 @@ void AI::developDodgeRoute() {
             minScore = nextscore;
         }
     }
-	    this->operation.shot = !(rand() % 30);
+	    this->operation.shot = !(rand() % 3000000);
 }
 
 
@@ -202,7 +202,7 @@ void AI::developSimpleStrategy() {
             target = data[i].pos;
         }
     }
-	    this->operation.shot = !(rand() % 30);
+	    this->operation.shot = !(rand() % 3000000);
 }
 
 
