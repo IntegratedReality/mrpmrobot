@@ -80,8 +80,8 @@ int main(int argc, char **argv)
 
 	long count = 0;
 	std::thread ai_thread([&](){
+		static bool last_shot_state = false;
 		while (ID >= 3 || receiver.getData(ID).isAI) {
-			static bool last_shot_state = ai.getOperation().shot;
 			if (!(receiver.getData(ID).state == DEAD || receiver.getData(ID).state == STANDBY)) {
 				if (last_shot_state != ai.getOperation().shot) {
 					sender.sendShot(ID, ai.getOperation().shot);
