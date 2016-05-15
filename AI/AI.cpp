@@ -49,6 +49,7 @@ Operation AI::getOperation() {
 }
 
 void AI::developRandomRoute() {
+			bool myshot = true;
 	    this->operation.direction = (EDirection)(rand() % 9);
 	    this->operation.shot = myshot * !(rand() % SHOT_HINDO);
 }
@@ -106,6 +107,8 @@ void AI::developDodgeRoute() {
     this->operation.shot = false;
 
     double minScore;
+
+		bool myshot = false;
     for(int i = 1; i < 9; i++) {
         Position nextpos;
         nextpos.x = mypos.x + DIFF_MOVE * cos(mypos.theta + (M_PI / 4) * (i-1));
@@ -166,7 +169,8 @@ void AI::developDodgeRoute() {
                         this->operation.direction = LEFT;
                     }else{
                         this->operation.direction = NO_INPUT;
-                        this->operation.shot = true;
+                        //this->operation.shot = true;
+												myshot = true;
                     }
                 }
             }
@@ -204,7 +208,7 @@ void AI::developSimpleStrategy() {
             target = data[i].pos;
         }
     }
-	this->operation.shot = myshot * !(rand() % SHOT_HINDO);
+	//this->operation.shot = myshot * !(rand() % SHOT_HINDO);
 }
 
 
