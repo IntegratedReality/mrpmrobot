@@ -1,5 +1,5 @@
 TARGET	= main.bin
-INCLUDES = -I/usr/local/include/eigen3 -I/usr/local/include/oscpack
+INCLUDES = -I/usr/local/include/eigen3 -I/usr/local/include/oscpack -IwiringPi
 LDFLAGS = -lwiringPi -loscpack -lpthread
 NOMAKEDIR = .git%
 OBJDIR = objs
