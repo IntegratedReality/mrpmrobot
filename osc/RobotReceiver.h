@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <thread>
+#include <array>
 #include <oscpack/osc/OscReceivedElements.h>
 #include <oscpack/osc/OscPacketListener.h>
 #include <oscpack/ip/UdpSocket.h>
@@ -11,20 +12,24 @@
 #include "../common/Const.h"
 #include "RobotListener.h"
 
-#define PORT 8000
+const int PORT_ROBOT{8000};
 
 class RobotReceiver {
 	public:
-		RobotReceiver() : s(IpEndpointName(IpEndpointName::ANY_ADDRESS, PORT), &listener) {}
+		RobotReceiver() {}
 		void init();
 		void update();
-		RobotData getData(int _id);
-		ETeam getPOOwner(int _id);
+		RobotData getData();
+    std::array<bool, 9> getPermissions();
+		//ETeam getPOOwner(int _id);
 		bool checkMessageReceived(void);
 	private:
 		std::thread th;
-		RobotListener listener;
-		UdpListeningReceiveSocket s;
-		RobotData data[NUM_OF_ROBOT];
-		ETeam owner[3];
+
+    std::unique_ptr<RobotListener> listener_ptr;
+
+    std::unique_ptr<UdpListeningReceiveSocket> s;
+		RobotData data;
+    std::array<bool, 9> permissions;
+		//ETeam owner[3];
 };
